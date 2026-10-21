@@ -1,0 +1,21 @@
+# Build output
+**/target/
+**/node_modules/
+**/dist/
+coverage/
+*.log
+# Local secrets
+.env
+.env.*
+!.env.example
+# Editors / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+# Local research data
+local-data/
+
+# Local planning document
+/start.txt

@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>4.1.1</version>
+    <relativePath/>
+  </parent>
+  <groupId>dev.fatestay</groupId>
+  <artifactId>fate-stay-research</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>FateStay Research</name>
+  <description>Modular Chinese metaphysics research platform scaffold</description>
+  <modules>
+    <module>backend/fate-common</module>
+    <module>backend/fate-calendar</module>
+    <module>backend/fate-bazi</module>
+    <module>backend/fate-server</module>
+  </modules>
+  <properties>
+    <java.version>26</java.version>
+    <maven.compiler.release>26</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <mybatis.version>4.1.0</mybatis.version>
+    <springdoc.version>3.1.1</springdoc.version>
+    <tyme4j.version>1.5.2</tyme4j.version>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>cn.6tail</groupId>
+        <artifactId>tyme4j</artifactId>
+        <version>${tyme4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>${mybatis.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>${springdoc.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>

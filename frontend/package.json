@@ -1,0 +1,27 @@
+{
+  "name": "fate-stay-research-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0 <23",
+    "npm": ">=10 <12"
+  },
+  "packageManager": "npm@10.9.4",
+  "scripts": {
+    "deps:check": "npm ls --depth=0"
+  },
+  "dependencies": {
+    "vue": "3.5.44",
+    "element-plus": "2.14.7",
+    "pinia": "4.1.0",
+    "vue-router": "5.4.0",
+    "axios": "1.20.0"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vite": "8.3.5",
+    "@vitejs/plugin-vue": "6.0.10",
+    "vue-tsc": "3.3.13"
+  }
+}

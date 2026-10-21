@@ -94,3 +94,7 @@ npm run deps:check
 ## 技术参考
 
 [Spring Boot](https://spring.io/projects/spring-boot) · [MyBatis](https://github.com/mybatis/spring-boot-starter) · [Springdoc](https://springdoc.org/) · [Tyme4j](https://github.com/6tail/tyme4j) · [Vue](https://vuejs.org/) · [Vite](https://vite.dev/)
+
+## 许可证
+
+本项目采用 [Apache License 2.0](LICENSE) 许可证。第三方依赖遵循各自的许可证。

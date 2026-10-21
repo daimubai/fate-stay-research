@@ -13,6 +13,13 @@
   <packaging>pom</packaging>
   <name>FateStay Research</name>
   <description>Modular Chinese metaphysics research platform scaffold</description>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
   <modules>
     <module>backend/fate-common</module>
     <module>backend/fate-calendar</module>

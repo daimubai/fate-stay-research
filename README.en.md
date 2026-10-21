@@ -94,3 +94,7 @@ npm run deps:check
 ## References
 
 [Spring Boot](https://spring.io/projects/spring-boot) · [MyBatis](https://github.com/mybatis/spring-boot-starter) · [Springdoc](https://springdoc.org/) · [Tyme4j](https://github.com/6tail/tyme4j) · [Vue](https://vuejs.org/) · [Vite](https://vite.dev/)
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE). Third-party dependencies remain subject to their respective licenses.

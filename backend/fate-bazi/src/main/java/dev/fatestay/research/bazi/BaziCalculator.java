@@ -4,6 +4,10 @@ import dev.fatestay.research.calendar.TymeCalendar;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /** Framework-independent minimum four-pillars calculation at fixed UTC+08:00. */
 public final class BaziCalculator {
@@ -25,13 +29,22 @@ public final class BaziCalculator {
         if (birthTime.getSecond() != 0 || birthTime.getNano() != 0) {
             throw new IllegalArgumentException("出生时间请精确到分钟，不支持秒或小数秒");
         }
-        var pillars = calendar.fourPillars(birthTime);
+        var analysis = calendar.analyze(birthTime);
+        Map<String, Integer> counts = new LinkedHashMap<>();
+        for (String element : List.of("木", "火", "土", "金", "水")) counts.put(element, 0);
+        // Eight visible characters only: one count per stem/branch; hidden stems are not weighted here.
+        for (var pillar : analysis.pillarDetails()) {
+            counts.compute(pillar.stem().element(), (key, count) -> count + 1);
+            counts.compute(pillar.branch().element(), (key, count) -> count + 1);
+        }
         return new Chart(birthTime, "UTC+08:00", "MINUTE", "tyme4j-1.5.2",
-                "lichun-jie-zi23-v1", pillars, inputCalendar, birthTime.toLocalDate(),
-                calendar.toLunar(birthTime.toLocalDate()));
+                "lichun-jie-zi23-v1", analysis.pillars(), inputCalendar, birthTime.toLocalDate(),
+                calendar.toLunar(birthTime.toLocalDate()), analysis.dayMaster(), analysis.pillarDetails(),
+                Collections.unmodifiableMap(counts));
     }
 
     public record Chart(LocalDateTime birthDateTime, String timeZone, String precision,
                         String engineVersion, String ruleVersion, TymeCalendar.Pillars pillars, String inputCalendar, LocalDate solarDate,
-                        TymeCalendar.LunarDate lunarDate) {}
+                        TymeCalendar.LunarDate lunarDate, TymeCalendar.DayMaster dayMaster,
+                        List<TymeCalendar.PillarDetail> pillarDetails, Map<String, Integer> elementCounts) {}
 }

@@ -95,13 +95,19 @@ Run `npm run build` for type checking and a production build. `npm run preview` 
 
 The existing TypeScript 7 / vue-tsc incompatibility was resolved by pinning TypeScript 6.0.3. The vulnerable transitive dependency `follow-redirects` was updated to 1.16.2 in the lockfile.
 
-See [macOS setup](docs/local-development-macos.md) for the MacData environment paths. Basic four-pillars calculation is available. Fortune cycles, accounts and persistence remain unimplemented.
+See [macOS setup](docs/local-development-macos.md) for the MacData environment paths. Four pillars, ten-god relationships, hidden stems, five-element attributes and Na Yin are available. Fortune cycles, accounts and persistence remain unimplemented.
 
 ## Basic four-pillars chart
 
-Choose Gregorian or Chinese lunar birth date input on the homepage; lunar input distinguishes regular and leap months. Both dates are returned and displayed. Inputs support 1900–2100 with minute precision and use fixed UTC+08:00, without daylight-saving or true-solar-time corrections. Tyme4j 1.5.2 rules: Li Chun year boundary, solar-term month boundary, day changes at 23:00. Results include the original input, offset, precision and engine/rule versions. See [API documentation](docs/api/README.md). Fortune cycles and chart persistence are not implemented.
+Choose Gregorian or Chinese lunar birth date input on the homepage; lunar input distinguishes regular and leap months. Both dates are returned and displayed. Inputs support 1900–2100 with minute precision and use fixed UTC+08:00, without daylight-saving or true-solar-time corrections. Tyme4j 1.5.2 rules: Li Chun year boundary, solar-term month boundary, day changes at 23:00. Results include the original input, offset, precision and engine/rule versions. See [API documentation](docs/api/README.md). Fortune cycles and server-side chart persistence are not implemented.
 
 Desktop uses Element Plus date/time controls; mobile uses Vant bottom-sheet wheels with year jump and confirm/cancel. Calendar switching preserves the selected day, and lunar month/day choices use the pinned Tyme4ts adapter. See [picker selection notes](docs/date-time-picker.md). Run `npm test` in `frontend` for adapter tests.
+
+The result includes the day master, stem/hidden-stem ten-god relationships, main/middle/residual hidden stems, stem/branch elements and Na Yin. Desktop uses a comparison table; mobile uses one card per pillar. Element counts include only the eight visible characters and do not represent weighted strength or favorable elements.
+
+## Guest local records
+
+Successful charts automatically save the birth input and full result in this browser, up to three slots. Equivalent solar/lunar inputs update one slot. Switch, rename, delete or explicitly replace records; refresh restores the active snapshot without recalculation. The result section also offers quick switching. Account login and cloud storage remain future work. Clearing site data removes local records; unavailable storage falls back to in-page use with a notice. See [local library notes](docs/local-chart-library.md).
 
 ## Roadmap
 

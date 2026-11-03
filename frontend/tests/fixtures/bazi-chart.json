@@ -1,0 +1,163 @@
+{
+  "birthDateTime": "1986-05-29T13:37:00",
+  "timeZone": "UTC+08:00",
+  "precision": "MINUTE",
+  "engineVersion": "tyme4j-1.5.2",
+  "ruleVersion": "lichun-jie-zi23-v1",
+  "pillars": {
+    "year": "丙寅",
+    "month": "癸巳",
+    "day": "癸酉",
+    "hour": "己未"
+  },
+  "inputCalendar": "SOLAR",
+  "solarDate": "1986-05-29",
+  "lunarDate": {
+    "year": 1986,
+    "month": 4,
+    "day": 21,
+    "leapMonth": false,
+    "display": "1986年四月廿一"
+  },
+  "dayMaster": {
+    "name": "癸",
+    "element": "水"
+  },
+  "pillarDetails": [
+    {
+      "key": "year",
+      "label": "年柱",
+      "ganZhi": "丙寅",
+      "stem": {
+        "name": "丙",
+        "element": "火",
+        "tenGod": "正财"
+      },
+      "branch": {
+        "name": "寅",
+        "element": "木"
+      },
+      "hiddenStems": [
+        {
+          "name": "甲",
+          "element": "木",
+          "tenGod": "伤官",
+          "qi": "本气"
+        },
+        {
+          "name": "丙",
+          "element": "火",
+          "tenGod": "正财",
+          "qi": "中气"
+        },
+        {
+          "name": "戊",
+          "element": "土",
+          "tenGod": "正官",
+          "qi": "余气"
+        }
+      ],
+      "naYin": "炉中火"
+    },
+    {
+      "key": "month",
+      "label": "月柱",
+      "ganZhi": "癸巳",
+      "stem": {
+        "name": "癸",
+        "element": "水",
+        "tenGod": "比肩"
+      },
+      "branch": {
+        "name": "巳",
+        "element": "火"
+      },
+      "hiddenStems": [
+        {
+          "name": "丙",
+          "element": "火",
+          "tenGod": "正财",
+          "qi": "本气"
+        },
+        {
+          "name": "庚",
+          "element": "金",
+          "tenGod": "正印",
+          "qi": "中气"
+        },
+        {
+          "name": "戊",
+          "element": "土",
+          "tenGod": "正官",
+          "qi": "余气"
+        }
+      ],
+      "naYin": "长流水"
+    },
+    {
+      "key": "day",
+      "label": "日柱",
+      "ganZhi": "癸酉",
+      "stem": {
+        "name": "癸",
+        "element": "水",
+        "tenGod": "比肩"
+      },
+      "branch": {
+        "name": "酉",
+        "element": "金"
+      },
+      "hiddenStems": [
+        {
+          "name": "辛",
+          "element": "金",
+          "tenGod": "偏印",
+          "qi": "本气"
+        }
+      ],
+      "naYin": "剑锋金"
+    },
+    {
+      "key": "hour",
+      "label": "时柱",
+      "ganZhi": "己未",
+      "stem": {
+        "name": "己",
+        "element": "土",
+        "tenGod": "七杀"
+      },
+      "branch": {
+        "name": "未",
+        "element": "土"
+      },
+      "hiddenStems": [
+        {
+          "name": "己",
+          "element": "土",
+          "tenGod": "七杀",
+          "qi": "本气"
+        },
+        {
+          "name": "丁",
+          "element": "火",
+          "tenGod": "偏财",
+          "qi": "中气"
+        },
+        {
+          "name": "乙",
+          "element": "木",
+          "tenGod": "食神",
+          "qi": "余气"
+        }
+      ],
+      "naYin": "天上火"
+    }
+  ],
+  "elementCounts": {
+    "木": 1,
+    "火": 2,
+    "土": 2,
+    "金": 1,
+    "水": 2
+  }
+}

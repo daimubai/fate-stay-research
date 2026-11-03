@@ -88,3 +88,7 @@ npm run deps:check
 首页可选择公历或农历日期和时间进行基础排盘，农历可选闰月，结果同时展示对应公历和农历。计算约定及接口示例见 [API 文档](api/README.md)。
 
 PC/手机选择器已分别接入 Element Plus/Vant，选择器适配测试运行 `cd frontend && npm test`，交互与选型见 [选择器说明](date-time-picker.md)。
+
+排盘结果已扩展十神、藏干、五行和纳音；PC 为对照表，手机为逐柱卡片。详细字段及五行计数口径见 [API 文档](api/README.md)。
+
+未登录模式会自动缓存最多 3 份完整排盘到当前浏览器，刷新可恢复并切换；本机记录说明见 [本机记录](local-chart-library.md)。开发时清除 localStorage 对应键可重置本机样例，后端不存储这些记录。

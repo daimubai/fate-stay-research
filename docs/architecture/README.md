@@ -34,3 +34,7 @@ Profiles `local`, `test`, `prod` are planned; only the default profile name is c
 ## Current four-pillars flow
 
 `BaziController` validates request input → framework-independent `BaziCalculator` checks range/precision and records policy metadata → `TymeCalendar` adapts the pinned Tyme4j API. The adapter uses explicit SixtyCycle rules instead of changing a global LunarHour provider. No database or framework dependency is added to the calculation modules.
+
+`TymeCalendar.analyze` uses the same EightChar instance for pillar details and the day-stem reference. `BaziCalculator` aggregates eight-character element counts with immutable output collections. Existing pillar strings remain available for compatibility; the UI renders enrichment from the backend rather than recalculating relationships in JavaScript.
+
+Guest chart snapshots are stored only in browser localStorage through `LocalStoragePort`. Record identity uses the fixed-offset solar minute, deduplicating equivalent solar/lunar input. No backend persistence/authentication boundary is introduced. See [local library](../local-chart-library.md).

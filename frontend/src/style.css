@@ -96,3 +96,10 @@ html:root { --el-color-primary: #254f44; --el-color-primary-light-3: #557e6f; --
 
 .birth-picker .desktop-birth-fields .el-date-editor.el-input { width: 100%; }
 .birth-picker .desktop-birth-fields .el-select__wrapper { min-height: 46px; }
+.saved-result-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 17px; font-size: 12px; line-height: 1.8; color: #67805b; }
+.saved-result-bar a { font-size: 11px; color: #6e865f; text-decoration: none; flex-shrink: 0; }
+.saved-result-tabs { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+.saved-result-tabs button { padding: 7px 11px; border: 1px solid #e0e8d9; background: #f6f8f2; color: #7a8b6b; font-size: 11px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.saved-result-tabs button[aria-pressed="true"] { background: #e8f0e0; border-color: #a6ba94; color: #466b37; }
+#chart-result, #local-library-title { scroll-margin-top: 20px; }
+@media (max-width: 520px) { .saved-result-bar { flex-wrap: wrap; gap: 4px; } }

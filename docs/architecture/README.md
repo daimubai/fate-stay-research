@@ -38,3 +38,5 @@ Profiles `local`, `test`, `prod` are planned; only the default profile name is c
 `TymeCalendar.analyze` uses the same EightChar instance for pillar details and the day-stem reference. `BaziCalculator` aggregates eight-character element counts with immutable output collections. Existing pillar strings remain available for compatibility; the UI renders enrichment from the backend rather than recalculating relationships in JavaScript.
 
 Guest chart snapshots are stored only in browser localStorage through `LocalStoragePort`. Record identity uses the fixed-offset solar minute, deduplicating equivalent solar/lunar input. No backend persistence/authentication boundary is introduced. See [local library](../local-chart-library.md).
+
+`TymeCalendar.fortune` adapts the default ChildLimit provider into immutable start-time/interval, decade and annual-year records. Annual Gan-Zhi uses SixtyCycleYear rather than the minor-fortune Fortune class. Public HTTP requests require explicit gender; legacy core overloads remain four-pillars-only for compatibility.

@@ -1,0 +1,1879 @@
+{
+  "birthDateTime": "1986-05-29T13:37:00",
+  "timeZone": "UTC+08:00",
+  "precision": "MINUTE",
+  "engineVersion": "tyme4j-1.5.2",
+  "ruleVersion": "lichun-jie-zi23-v1",
+  "pillars": {
+    "year": "丙寅",
+    "month": "癸巳",
+    "day": "癸酉",
+    "hour": "己未"
+  },
+  "inputCalendar": "SOLAR",
+  "solarDate": "1986-05-29",
+  "lunarDate": {
+    "year": 1986,
+    "month": 4,
+    "day": 21,
+    "leapMonth": false,
+    "display": "1986年四月廿一"
+  },
+  "dayMaster": {
+    "name": "癸",
+    "element": "水"
+  },
+  "pillarDetails": [
+    {
+      "key": "year",
+      "label": "年柱",
+      "ganZhi": "丙寅",
+      "stem": {
+        "name": "丙",
+        "element": "火",
+        "tenGod": "正财"
+      },
+      "branch": {
+        "name": "寅",
+        "element": "木"
+      },
+      "hiddenStems": [
+        {
+          "name": "甲",
+          "element": "木",
+          "tenGod": "伤官",
+          "qi": "本气"
+        },
+        {
+          "name": "丙",
+          "element": "火",
+          "tenGod": "正财",
+          "qi": "中气"
+        },
+        {
+          "name": "戊",
+          "element": "土",
+          "tenGod": "正官",
+          "qi": "余气"
+        }
+      ],
+      "naYin": "炉中火"
+    },
+    {
+      "key": "month",
+      "label": "月柱",
+      "ganZhi": "癸巳",
+      "stem": {
+        "name": "癸",
+        "element": "水",
+        "tenGod": "比肩"
+      },
+      "branch": {
+        "name": "巳",
+        "element": "火"
+      },
+      "hiddenStems": [
+        {
+          "name": "丙",
+          "element": "火",
+          "tenGod": "正财",
+          "qi": "本气"
+        },
+        {
+          "name": "庚",
+          "element": "金",
+          "tenGod": "正印",
+          "qi": "中气"
+        },
+        {
+          "name": "戊",
+          "element": "土",
+          "tenGod": "正官",
+          "qi": "余气"
+        }
+      ],
+      "naYin": "长流水"
+    },
+    {
+      "key": "day",
+      "label": "日柱",
+      "ganZhi": "癸酉",
+      "stem": {
+        "name": "癸",
+        "element": "水",
+        "tenGod": "比肩"
+      },
+      "branch": {
+        "name": "酉",
+        "element": "金"
+      },
+      "hiddenStems": [
+        {
+          "name": "辛",
+          "element": "金",
+          "tenGod": "偏印",
+          "qi": "本气"
+        }
+      ],
+      "naYin": "剑锋金"
+    },
+    {
+      "key": "hour",
+      "label": "时柱",
+      "ganZhi": "己未",
+      "stem": {
+        "name": "己",
+        "element": "土",
+        "tenGod": "七杀"
+      },
+      "branch": {
+        "name": "未",
+        "element": "土"
+      },
+      "hiddenStems": [
+        {
+          "name": "己",
+          "element": "土",
+          "tenGod": "七杀",
+          "qi": "本气"
+        },
+        {
+          "name": "丁",
+          "element": "火",
+          "tenGod": "偏财",
+          "qi": "中气"
+        },
+        {
+          "name": "乙",
+          "element": "木",
+          "tenGod": "食神",
+          "qi": "余气"
+        }
+      ],
+      "naYin": "天上火"
+    }
+  ],
+  "elementCounts": {
+    "木": 1,
+    "火": 2,
+    "土": 2,
+    "金": 1,
+    "水": 2
+  },
+  "gender": "FEMALE",
+  "fortune": {
+    "ruleVersion": "tyme-default-child-limit-v1",
+    "direction": "REVERSE",
+    "startTime": "1994-03-22T02:25:00",
+    "startInterval": {
+      "years": 7,
+      "months": 9,
+      "days": 20,
+      "hours": 12,
+      "minutes": 48
+    },
+    "ageConvention": "YEAR_DIFF_PLUS_ONE",
+    "decades": [
+      {
+        "index": 1,
+        "ganZhi": "壬辰",
+        "startAge": 9,
+        "endAge": 18,
+        "startYear": 1994,
+        "endYear": 2003,
+        "stem": {
+          "name": "壬",
+          "element": "水",
+          "tenGod": "劫财"
+        },
+        "branch": {
+          "name": "辰",
+          "element": "土"
+        },
+        "naYin": "长流水",
+        "annualYears": [
+          {
+            "year": 1994,
+            "age": 9,
+            "ganZhi": "甲戌",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "戌",
+              "element": "土"
+            },
+            "naYin": "山头火"
+          },
+          {
+            "year": 1995,
+            "age": 10,
+            "ganZhi": "乙亥",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "亥",
+              "element": "水"
+            },
+            "naYin": "山头火"
+          },
+          {
+            "year": 1996,
+            "age": 11,
+            "ganZhi": "丙子",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "子",
+              "element": "水"
+            },
+            "naYin": "涧下水"
+          },
+          {
+            "year": 1997,
+            "age": 12,
+            "ganZhi": "丁丑",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "丑",
+              "element": "土"
+            },
+            "naYin": "涧下水"
+          },
+          {
+            "year": 1998,
+            "age": 13,
+            "ganZhi": "戊寅",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "寅",
+              "element": "木"
+            },
+            "naYin": "城头土"
+          },
+          {
+            "year": 1999,
+            "age": 14,
+            "ganZhi": "己卯",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "卯",
+              "element": "木"
+            },
+            "naYin": "城头土"
+          },
+          {
+            "year": 2000,
+            "age": 15,
+            "ganZhi": "庚辰",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "辰",
+              "element": "土"
+            },
+            "naYin": "白蜡金"
+          },
+          {
+            "year": 2001,
+            "age": 16,
+            "ganZhi": "辛巳",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "巳",
+              "element": "火"
+            },
+            "naYin": "白蜡金"
+          },
+          {
+            "year": 2002,
+            "age": 17,
+            "ganZhi": "壬午",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "午",
+              "element": "火"
+            },
+            "naYin": "杨柳木"
+          },
+          {
+            "year": 2003,
+            "age": 18,
+            "ganZhi": "癸未",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "未",
+              "element": "土"
+            },
+            "naYin": "杨柳木"
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "ganZhi": "辛卯",
+        "startAge": 19,
+        "endAge": 28,
+        "startYear": 2004,
+        "endYear": 2013,
+        "stem": {
+          "name": "辛",
+          "element": "金",
+          "tenGod": "偏印"
+        },
+        "branch": {
+          "name": "卯",
+          "element": "木"
+        },
+        "naYin": "松柏木",
+        "annualYears": [
+          {
+            "year": 2004,
+            "age": 19,
+            "ganZhi": "甲申",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "申",
+              "element": "金"
+            },
+            "naYin": "泉中水"
+          },
+          {
+            "year": 2005,
+            "age": 20,
+            "ganZhi": "乙酉",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "酉",
+              "element": "金"
+            },
+            "naYin": "泉中水"
+          },
+          {
+            "year": 2006,
+            "age": 21,
+            "ganZhi": "丙戌",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "戌",
+              "element": "土"
+            },
+            "naYin": "屋上土"
+          },
+          {
+            "year": 2007,
+            "age": 22,
+            "ganZhi": "丁亥",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "亥",
+              "element": "水"
+            },
+            "naYin": "屋上土"
+          },
+          {
+            "year": 2008,
+            "age": 23,
+            "ganZhi": "戊子",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "子",
+              "element": "水"
+            },
+            "naYin": "霹雳火"
+          },
+          {
+            "year": 2009,
+            "age": 24,
+            "ganZhi": "己丑",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "丑",
+              "element": "土"
+            },
+            "naYin": "霹雳火"
+          },
+          {
+            "year": 2010,
+            "age": 25,
+            "ganZhi": "庚寅",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "寅",
+              "element": "木"
+            },
+            "naYin": "松柏木"
+          },
+          {
+            "year": 2011,
+            "age": 26,
+            "ganZhi": "辛卯",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "卯",
+              "element": "木"
+            },
+            "naYin": "松柏木"
+          },
+          {
+            "year": 2012,
+            "age": 27,
+            "ganZhi": "壬辰",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "辰",
+              "element": "土"
+            },
+            "naYin": "长流水"
+          },
+          {
+            "year": 2013,
+            "age": 28,
+            "ganZhi": "癸巳",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "巳",
+              "element": "火"
+            },
+            "naYin": "长流水"
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "ganZhi": "庚寅",
+        "startAge": 29,
+        "endAge": 38,
+        "startYear": 2014,
+        "endYear": 2023,
+        "stem": {
+          "name": "庚",
+          "element": "金",
+          "tenGod": "正印"
+        },
+        "branch": {
+          "name": "寅",
+          "element": "木"
+        },
+        "naYin": "松柏木",
+        "annualYears": [
+          {
+            "year": 2014,
+            "age": 29,
+            "ganZhi": "甲午",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "午",
+              "element": "火"
+            },
+            "naYin": "沙中金"
+          },
+          {
+            "year": 2015,
+            "age": 30,
+            "ganZhi": "乙未",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "未",
+              "element": "土"
+            },
+            "naYin": "沙中金"
+          },
+          {
+            "year": 2016,
+            "age": 31,
+            "ganZhi": "丙申",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "申",
+              "element": "金"
+            },
+            "naYin": "山下火"
+          },
+          {
+            "year": 2017,
+            "age": 32,
+            "ganZhi": "丁酉",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "酉",
+              "element": "金"
+            },
+            "naYin": "山下火"
+          },
+          {
+            "year": 2018,
+            "age": 33,
+            "ganZhi": "戊戌",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "戌",
+              "element": "土"
+            },
+            "naYin": "平地木"
+          },
+          {
+            "year": 2019,
+            "age": 34,
+            "ganZhi": "己亥",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "亥",
+              "element": "水"
+            },
+            "naYin": "平地木"
+          },
+          {
+            "year": 2020,
+            "age": 35,
+            "ganZhi": "庚子",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "子",
+              "element": "水"
+            },
+            "naYin": "壁上土"
+          },
+          {
+            "year": 2021,
+            "age": 36,
+            "ganZhi": "辛丑",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "丑",
+              "element": "土"
+            },
+            "naYin": "壁上土"
+          },
+          {
+            "year": 2022,
+            "age": 37,
+            "ganZhi": "壬寅",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "寅",
+              "element": "木"
+            },
+            "naYin": "金箔金"
+          },
+          {
+            "year": 2023,
+            "age": 38,
+            "ganZhi": "癸卯",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "卯",
+              "element": "木"
+            },
+            "naYin": "金箔金"
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "ganZhi": "己丑",
+        "startAge": 39,
+        "endAge": 48,
+        "startYear": 2024,
+        "endYear": 2033,
+        "stem": {
+          "name": "己",
+          "element": "土",
+          "tenGod": "七杀"
+        },
+        "branch": {
+          "name": "丑",
+          "element": "土"
+        },
+        "naYin": "霹雳火",
+        "annualYears": [
+          {
+            "year": 2024,
+            "age": 39,
+            "ganZhi": "甲辰",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "辰",
+              "element": "土"
+            },
+            "naYin": "覆灯火"
+          },
+          {
+            "year": 2025,
+            "age": 40,
+            "ganZhi": "乙巳",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "巳",
+              "element": "火"
+            },
+            "naYin": "覆灯火"
+          },
+          {
+            "year": 2026,
+            "age": 41,
+            "ganZhi": "丙午",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "午",
+              "element": "火"
+            },
+            "naYin": "天河水"
+          },
+          {
+            "year": 2027,
+            "age": 42,
+            "ganZhi": "丁未",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "未",
+              "element": "土"
+            },
+            "naYin": "天河水"
+          },
+          {
+            "year": 2028,
+            "age": 43,
+            "ganZhi": "戊申",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "申",
+              "element": "金"
+            },
+            "naYin": "大驿土"
+          },
+          {
+            "year": 2029,
+            "age": 44,
+            "ganZhi": "己酉",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "酉",
+              "element": "金"
+            },
+            "naYin": "大驿土"
+          },
+          {
+            "year": 2030,
+            "age": 45,
+            "ganZhi": "庚戌",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "戌",
+              "element": "土"
+            },
+            "naYin": "钗钏金"
+          },
+          {
+            "year": 2031,
+            "age": 46,
+            "ganZhi": "辛亥",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "亥",
+              "element": "水"
+            },
+            "naYin": "钗钏金"
+          },
+          {
+            "year": 2032,
+            "age": 47,
+            "ganZhi": "壬子",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "子",
+              "element": "水"
+            },
+            "naYin": "桑柘木"
+          },
+          {
+            "year": 2033,
+            "age": 48,
+            "ganZhi": "癸丑",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "丑",
+              "element": "土"
+            },
+            "naYin": "桑柘木"
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "ganZhi": "戊子",
+        "startAge": 49,
+        "endAge": 58,
+        "startYear": 2034,
+        "endYear": 2043,
+        "stem": {
+          "name": "戊",
+          "element": "土",
+          "tenGod": "正官"
+        },
+        "branch": {
+          "name": "子",
+          "element": "水"
+        },
+        "naYin": "霹雳火",
+        "annualYears": [
+          {
+            "year": 2034,
+            "age": 49,
+            "ganZhi": "甲寅",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "寅",
+              "element": "木"
+            },
+            "naYin": "大溪水"
+          },
+          {
+            "year": 2035,
+            "age": 50,
+            "ganZhi": "乙卯",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "卯",
+              "element": "木"
+            },
+            "naYin": "大溪水"
+          },
+          {
+            "year": 2036,
+            "age": 51,
+            "ganZhi": "丙辰",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "辰",
+              "element": "土"
+            },
+            "naYin": "沙中土"
+          },
+          {
+            "year": 2037,
+            "age": 52,
+            "ganZhi": "丁巳",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "巳",
+              "element": "火"
+            },
+            "naYin": "沙中土"
+          },
+          {
+            "year": 2038,
+            "age": 53,
+            "ganZhi": "戊午",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "午",
+              "element": "火"
+            },
+            "naYin": "天上火"
+          },
+          {
+            "year": 2039,
+            "age": 54,
+            "ganZhi": "己未",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "未",
+              "element": "土"
+            },
+            "naYin": "天上火"
+          },
+          {
+            "year": 2040,
+            "age": 55,
+            "ganZhi": "庚申",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "申",
+              "element": "金"
+            },
+            "naYin": "石榴木"
+          },
+          {
+            "year": 2041,
+            "age": 56,
+            "ganZhi": "辛酉",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "酉",
+              "element": "金"
+            },
+            "naYin": "石榴木"
+          },
+          {
+            "year": 2042,
+            "age": 57,
+            "ganZhi": "壬戌",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "戌",
+              "element": "土"
+            },
+            "naYin": "大海水"
+          },
+          {
+            "year": 2043,
+            "age": 58,
+            "ganZhi": "癸亥",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "亥",
+              "element": "水"
+            },
+            "naYin": "大海水"
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "ganZhi": "丁亥",
+        "startAge": 59,
+        "endAge": 68,
+        "startYear": 2044,
+        "endYear": 2053,
+        "stem": {
+          "name": "丁",
+          "element": "火",
+          "tenGod": "偏财"
+        },
+        "branch": {
+          "name": "亥",
+          "element": "水"
+        },
+        "naYin": "屋上土",
+        "annualYears": [
+          {
+            "year": 2044,
+            "age": 59,
+            "ganZhi": "甲子",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "子",
+              "element": "水"
+            },
+            "naYin": "海中金"
+          },
+          {
+            "year": 2045,
+            "age": 60,
+            "ganZhi": "乙丑",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "丑",
+              "element": "土"
+            },
+            "naYin": "海中金"
+          },
+          {
+            "year": 2046,
+            "age": 61,
+            "ganZhi": "丙寅",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "寅",
+              "element": "木"
+            },
+            "naYin": "炉中火"
+          },
+          {
+            "year": 2047,
+            "age": 62,
+            "ganZhi": "丁卯",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "卯",
+              "element": "木"
+            },
+            "naYin": "炉中火"
+          },
+          {
+            "year": 2048,
+            "age": 63,
+            "ganZhi": "戊辰",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "辰",
+              "element": "土"
+            },
+            "naYin": "大林木"
+          },
+          {
+            "year": 2049,
+            "age": 64,
+            "ganZhi": "己巳",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "巳",
+              "element": "火"
+            },
+            "naYin": "大林木"
+          },
+          {
+            "year": 2050,
+            "age": 65,
+            "ganZhi": "庚午",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "午",
+              "element": "火"
+            },
+            "naYin": "路旁土"
+          },
+          {
+            "year": 2051,
+            "age": 66,
+            "ganZhi": "辛未",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "未",
+              "element": "土"
+            },
+            "naYin": "路旁土"
+          },
+          {
+            "year": 2052,
+            "age": 67,
+            "ganZhi": "壬申",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "申",
+              "element": "金"
+            },
+            "naYin": "剑锋金"
+          },
+          {
+            "year": 2053,
+            "age": 68,
+            "ganZhi": "癸酉",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "酉",
+              "element": "金"
+            },
+            "naYin": "剑锋金"
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "ganZhi": "丙戌",
+        "startAge": 69,
+        "endAge": 78,
+        "startYear": 2054,
+        "endYear": 2063,
+        "stem": {
+          "name": "丙",
+          "element": "火",
+          "tenGod": "正财"
+        },
+        "branch": {
+          "name": "戌",
+          "element": "土"
+        },
+        "naYin": "屋上土",
+        "annualYears": [
+          {
+            "year": 2054,
+            "age": 69,
+            "ganZhi": "甲戌",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "戌",
+              "element": "土"
+            },
+            "naYin": "山头火"
+          },
+          {
+            "year": 2055,
+            "age": 70,
+            "ganZhi": "乙亥",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "亥",
+              "element": "水"
+            },
+            "naYin": "山头火"
+          },
+          {
+            "year": 2056,
+            "age": 71,
+            "ganZhi": "丙子",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "子",
+              "element": "水"
+            },
+            "naYin": "涧下水"
+          },
+          {
+            "year": 2057,
+            "age": 72,
+            "ganZhi": "丁丑",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "丑",
+              "element": "土"
+            },
+            "naYin": "涧下水"
+          },
+          {
+            "year": 2058,
+            "age": 73,
+            "ganZhi": "戊寅",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "寅",
+              "element": "木"
+            },
+            "naYin": "城头土"
+          },
+          {
+            "year": 2059,
+            "age": 74,
+            "ganZhi": "己卯",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "卯",
+              "element": "木"
+            },
+            "naYin": "城头土"
+          },
+          {
+            "year": 2060,
+            "age": 75,
+            "ganZhi": "庚辰",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "辰",
+              "element": "土"
+            },
+            "naYin": "白蜡金"
+          },
+          {
+            "year": 2061,
+            "age": 76,
+            "ganZhi": "辛巳",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "巳",
+              "element": "火"
+            },
+            "naYin": "白蜡金"
+          },
+          {
+            "year": 2062,
+            "age": 77,
+            "ganZhi": "壬午",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "午",
+              "element": "火"
+            },
+            "naYin": "杨柳木"
+          },
+          {
+            "year": 2063,
+            "age": 78,
+            "ganZhi": "癸未",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "未",
+              "element": "土"
+            },
+            "naYin": "杨柳木"
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "ganZhi": "乙酉",
+        "startAge": 79,
+        "endAge": 88,
+        "startYear": 2064,
+        "endYear": 2073,
+        "stem": {
+          "name": "乙",
+          "element": "木",
+          "tenGod": "食神"
+        },
+        "branch": {
+          "name": "酉",
+          "element": "金"
+        },
+        "naYin": "泉中水",
+        "annualYears": [
+          {
+            "year": 2064,
+            "age": 79,
+            "ganZhi": "甲申",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "申",
+              "element": "金"
+            },
+            "naYin": "泉中水"
+          },
+          {
+            "year": 2065,
+            "age": 80,
+            "ganZhi": "乙酉",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "酉",
+              "element": "金"
+            },
+            "naYin": "泉中水"
+          },
+          {
+            "year": 2066,
+            "age": 81,
+            "ganZhi": "丙戌",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "戌",
+              "element": "土"
+            },
+            "naYin": "屋上土"
+          },
+          {
+            "year": 2067,
+            "age": 82,
+            "ganZhi": "丁亥",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "亥",
+              "element": "水"
+            },
+            "naYin": "屋上土"
+          },
+          {
+            "year": 2068,
+            "age": 83,
+            "ganZhi": "戊子",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "子",
+              "element": "水"
+            },
+            "naYin": "霹雳火"
+          },
+          {
+            "year": 2069,
+            "age": 84,
+            "ganZhi": "己丑",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "丑",
+              "element": "土"
+            },
+            "naYin": "霹雳火"
+          },
+          {
+            "year": 2070,
+            "age": 85,
+            "ganZhi": "庚寅",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "寅",
+              "element": "木"
+            },
+            "naYin": "松柏木"
+          },
+          {
+            "year": 2071,
+            "age": 86,
+            "ganZhi": "辛卯",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "卯",
+              "element": "木"
+            },
+            "naYin": "松柏木"
+          },
+          {
+            "year": 2072,
+            "age": 87,
+            "ganZhi": "壬辰",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "辰",
+              "element": "土"
+            },
+            "naYin": "长流水"
+          },
+          {
+            "year": 2073,
+            "age": 88,
+            "ganZhi": "癸巳",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "巳",
+              "element": "火"
+            },
+            "naYin": "长流水"
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "ganZhi": "甲申",
+        "startAge": 89,
+        "endAge": 98,
+        "startYear": 2074,
+        "endYear": 2083,
+        "stem": {
+          "name": "甲",
+          "element": "木",
+          "tenGod": "伤官"
+        },
+        "branch": {
+          "name": "申",
+          "element": "金"
+        },
+        "naYin": "泉中水",
+        "annualYears": [
+          {
+            "year": 2074,
+            "age": 89,
+            "ganZhi": "甲午",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "午",
+              "element": "火"
+            },
+            "naYin": "沙中金"
+          },
+          {
+            "year": 2075,
+            "age": 90,
+            "ganZhi": "乙未",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "未",
+              "element": "土"
+            },
+            "naYin": "沙中金"
+          },
+          {
+            "year": 2076,
+            "age": 91,
+            "ganZhi": "丙申",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "申",
+              "element": "金"
+            },
+            "naYin": "山下火"
+          },
+          {
+            "year": 2077,
+            "age": 92,
+            "ganZhi": "丁酉",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "酉",
+              "element": "金"
+            },
+            "naYin": "山下火"
+          },
+          {
+            "year": 2078,
+            "age": 93,
+            "ganZhi": "戊戌",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "戌",
+              "element": "土"
+            },
+            "naYin": "平地木"
+          },
+          {
+            "year": 2079,
+            "age": 94,
+            "ganZhi": "己亥",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "亥",
+              "element": "水"
+            },
+            "naYin": "平地木"
+          },
+          {
+            "year": 2080,
+            "age": 95,
+            "ganZhi": "庚子",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "子",
+              "element": "水"
+            },
+            "naYin": "壁上土"
+          },
+          {
+            "year": 2081,
+            "age": 96,
+            "ganZhi": "辛丑",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "丑",
+              "element": "土"
+            },
+            "naYin": "壁上土"
+          },
+          {
+            "year": 2082,
+            "age": 97,
+            "ganZhi": "壬寅",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "寅",
+              "element": "木"
+            },
+            "naYin": "金箔金"
+          },
+          {
+            "year": 2083,
+            "age": 98,
+            "ganZhi": "癸卯",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "卯",
+              "element": "木"
+            },
+            "naYin": "金箔金"
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "ganZhi": "癸未",
+        "startAge": 99,
+        "endAge": 108,
+        "startYear": 2084,
+        "endYear": 2093,
+        "stem": {
+          "name": "癸",
+          "element": "水",
+          "tenGod": "比肩"
+        },
+        "branch": {
+          "name": "未",
+          "element": "土"
+        },
+        "naYin": "杨柳木",
+        "annualYears": [
+          {
+            "year": 2084,
+            "age": 99,
+            "ganZhi": "甲辰",
+            "stem": {
+              "name": "甲",
+              "element": "木",
+              "tenGod": "伤官"
+            },
+            "branch": {
+              "name": "辰",
+              "element": "土"
+            },
+            "naYin": "覆灯火"
+          },
+          {
+            "year": 2085,
+            "age": 100,
+            "ganZhi": "乙巳",
+            "stem": {
+              "name": "乙",
+              "element": "木",
+              "tenGod": "食神"
+            },
+            "branch": {
+              "name": "巳",
+              "element": "火"
+            },
+            "naYin": "覆灯火"
+          },
+          {
+            "year": 2086,
+            "age": 101,
+            "ganZhi": "丙午",
+            "stem": {
+              "name": "丙",
+              "element": "火",
+              "tenGod": "正财"
+            },
+            "branch": {
+              "name": "午",
+              "element": "火"
+            },
+            "naYin": "天河水"
+          },
+          {
+            "year": 2087,
+            "age": 102,
+            "ganZhi": "丁未",
+            "stem": {
+              "name": "丁",
+              "element": "火",
+              "tenGod": "偏财"
+            },
+            "branch": {
+              "name": "未",
+              "element": "土"
+            },
+            "naYin": "天河水"
+          },
+          {
+            "year": 2088,
+            "age": 103,
+            "ganZhi": "戊申",
+            "stem": {
+              "name": "戊",
+              "element": "土",
+              "tenGod": "正官"
+            },
+            "branch": {
+              "name": "申",
+              "element": "金"
+            },
+            "naYin": "大驿土"
+          },
+          {
+            "year": 2089,
+            "age": 104,
+            "ganZhi": "己酉",
+            "stem": {
+              "name": "己",
+              "element": "土",
+              "tenGod": "七杀"
+            },
+            "branch": {
+              "name": "酉",
+              "element": "金"
+            },
+            "naYin": "大驿土"
+          },
+          {
+            "year": 2090,
+            "age": 105,
+            "ganZhi": "庚戌",
+            "stem": {
+              "name": "庚",
+              "element": "金",
+              "tenGod": "正印"
+            },
+            "branch": {
+              "name": "戌",
+              "element": "土"
+            },
+            "naYin": "钗钏金"
+          },
+          {
+            "year": 2091,
+            "age": 106,
+            "ganZhi": "辛亥",
+            "stem": {
+              "name": "辛",
+              "element": "金",
+              "tenGod": "偏印"
+            },
+            "branch": {
+              "name": "亥",
+              "element": "水"
+            },
+            "naYin": "钗钏金"
+          },
+          {
+            "year": 2092,
+            "age": 107,
+            "ganZhi": "壬子",
+            "stem": {
+              "name": "壬",
+              "element": "水",
+              "tenGod": "劫财"
+            },
+            "branch": {
+              "name": "子",
+              "element": "水"
+            },
+            "naYin": "桑柘木"
+          },
+          {
+            "year": 2093,
+            "age": 108,
+            "ganZhi": "癸丑",
+            "stem": {
+              "name": "癸",
+              "element": "水",
+              "tenGod": "比肩"
+            },
+            "branch": {
+              "name": "丑",
+              "element": "土"
+            },
+            "naYin": "桑柘木"
+          }
+        ]
+      }
+    ]
+  }
+}

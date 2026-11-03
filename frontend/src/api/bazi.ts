@@ -1,5 +1,10 @@
 import axios from 'axios'
 
+export type BirthGender = 'MALE' | 'FEMALE'
+export interface AnnualYear { year: number; age: number; ganZhi: string; stem: StemDetail; branch: { name: string; element: ElementName }; naYin: string }
+export interface DecadeFortune { index: number; ganZhi: string; startAge: number; endAge: number; startYear: number; endYear: number; stem: StemDetail; branch: { name: string; element: ElementName }; naYin: string; annualYears: AnnualYear[] }
+export interface FortuneTimeline { ruleVersion: string; direction: 'FORWARD' | 'REVERSE'; startTime: string; startInterval: { years: number; months: number; days: number; hours: number; minutes: number }; ageConvention: 'YEAR_DIFF_PLUS_ONE'; decades: DecadeFortune[] }
+
 export type ElementName = '木' | '火' | '土' | '金' | '水'
 export interface StemDetail { name: string; element: ElementName; tenGod: string }
 export interface HiddenStem extends StemDetail { qi: '本气' | '中气' | '余气' }
@@ -14,6 +19,8 @@ export interface PillarDetail {
 }
 
 export interface BaziChart {
+  gender?: BirthGender | null
+  fortune?: FortuneTimeline | null
   dayMaster: { name: string; element: ElementName }
   pillarDetails: PillarDetail[]
   elementCounts: Record<ElementName, number>
@@ -29,8 +36,8 @@ export interface BaziChart {
 }
 
 export type BirthInput =
-  | { calendarType: 'SOLAR'; birthDate: string; birthTime: string }
-  | { calendarType: 'LUNAR'; lunarDate: { year: number; month: number; day: number; leapMonth: boolean }; birthTime: string }
+  | { calendarType: 'SOLAR'; birthDate: string; birthTime: string; gender: BirthGender }
+  | { calendarType: 'LUNAR'; lunarDate: { year: number; month: number; day: number; leapMonth: boolean }; birthTime: string; gender: BirthGender }
 
 export async function calculateBazi(input: BirthInput): Promise<BaziChart> {
   const { data } = await axios.post<BaziChart>('/api/v1/bazi/charts', input, { timeout: 10000 })

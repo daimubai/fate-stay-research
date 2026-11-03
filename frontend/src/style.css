@@ -103,3 +103,11 @@ html:root { --el-color-primary: #254f44; --el-color-primary-light-3: #557e6f; --
 .saved-result-tabs button[aria-pressed="true"] { background: #e8f0e0; border-color: #a6ba94; color: #466b37; }
 #chart-result, #local-library-title { scroll-margin-top: 20px; }
 @media (max-width: 520px) { .saved-result-bar { flex-wrap: wrap; gap: 4px; } }
+.gender-field { border: 0; padding: 0; margin: 22px 0 0; }
+.gender-field legend { font-size: 13px; font-weight: 550; color: #53685e; margin-bottom: 10px; }
+.gender-field legend span { font-size: 11px; font-weight: 400; color: #85917d; margin-left: 10px; }
+.gender-field > div { display: flex; gap: 10px; }
+.gender-field button { background: #f7f9f3; border: 1px solid #dfe7d8; color: #75866a; min-width: 95px; min-height: 42px; }
+.gender-field button[aria-pressed="true"] { background: #eaf2e2; border-color: #809e6b; color: #3c6530; box-shadow: 0 0 0 1px #809e6b; }
+.legacy-fortune-note { padding: 15px; border: 1px solid #e9e0c8; background: #faf7ef; border-radius: 9px; font-size: 12px; line-height: 1.9; color: #8a754b; }
+.legacy-fortune-note a { color: #66824e; }

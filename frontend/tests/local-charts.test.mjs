@@ -137,3 +137,51 @@ test('can save reactive-style proxy snapshots without structuredClone failures',
   const proxy = new Proxy(chart, {})
   assert.equal(saveChart(emptyLibrary(), birth, proxy).records.length, 1)
 })
+
+const maleFortune = JSON.parse(readFileSync(new URL('./fixtures/bazi-fortune-male.json', import.meta.url), 'utf8'))
+const femaleFortune = JSON.parse(readFileSync(new URL('./fixtures/bazi-fortune-female.json', import.meta.url), 'utf8'))
+function genderInput(gender) {
+  return { solarDate: '1986-05-29', time: '13:37', calendarType: 'SOLAR', gender }
+}
+
+test('same birth minute with different genders occupies distinct slots and survives reload', () => {
+  const male = saveChart(emptyLibrary(), genderInput('MALE'), maleFortune)
+  const both = saveChart(male, genderInput('FEMALE'), femaleFortune)
+  assert.equal(both.records.length, 2)
+  assert.notEqual(both.records[0].id, both.records[1].id)
+  assert.equal(both.records[0].chart.fortune.direction, 'FORWARD')
+  assert.equal(both.records[1].chart.fortune.direction, 'REVERSE')
+  const storage = memoryStorage()
+  assert.equal(writeLibrary(storage, both), '')
+  assert.deepEqual(readLibrary(storage).library, both)
+  assert.equal(readLibrary(storage).notice, '')
+})
+
+test('legacy snapshot remains available and explicit gender recalculation upgrades the same slot', () => {
+  const old = add(emptyLibrary())
+  const named = renameChart(old, old.activeId, '原记录')
+  const storage = memoryStorage()
+  writeLibrary(storage, named)
+  const legacy = readLibrary(storage).library
+  assert.equal(legacy.records[0].birth.gender, undefined)
+  const upgraded = saveChart(legacy, genderInput('MALE'), maleFortune)
+  assert.equal(upgraded.records.length, 1)
+  assert.equal(upgraded.records[0].name, '原记录')
+  assert.equal(upgraded.records[0].birth.gender, 'MALE')
+  assert.equal(upgraded.activeId, chartId(genderInput('MALE')))
+})
+
+test('cached fortune rejects wrong gender, incomplete decades or broken annual chronology', () => {
+  for (const mutate of [
+    chart => { chart.gender = 'FEMALE' },
+    chart => { chart.gender = false },
+    chart => { chart.fortune = null },
+    chart => { chart.fortune.decades.pop() },
+    chart => { chart.fortune.decades[0].annualYears[0].year++ },
+    chart => { chart.fortune.decades[0].annualYears[0].stem.element = 'unknown' },
+  ]) {
+    const chart = structuredClone(maleFortune)
+    mutate(chart)
+    assert.throws(() => saveChart(emptyLibrary(), genderInput('MALE'), chart), /不完整/)
+  }
+})

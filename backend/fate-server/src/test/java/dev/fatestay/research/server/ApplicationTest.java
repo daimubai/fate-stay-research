@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import org.springframework.http.MediaType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -42,7 +43,7 @@ class ApplicationTest {
     @Test
     void calculatesChartWithoutAuthenticationOrCsrfToken() throws Exception {
         mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"birthDate\":\"1986-05-29\",\"birthTime\":\"13:37\"}"))
+                .content("{\"gender\":\"MALE\",\"birthDate\":\"1986-05-29\",\"birthTime\":\"13:37\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.pillars.year").value("丙寅"))
                 .andExpect(jsonPath("$.pillars.month").value("癸巳"))
@@ -75,10 +76,10 @@ class ApplicationTest {
     @ParameterizedTest
     @ValueSource(strings = {
         "{}", "null", "{broken",
-        "{\"birthDate\":\"2001-02-29\",\"birthTime\":\"13:37\"}",
-        "{\"birthDate\":\"1986-05-29\",\"birthTime\":\"24:00\"}",
-        "{\"birthDate\":\"1899-05-29\",\"birthTime\":\"13:37\"}",
-        "{\"birthDate\":\"1986-05-29\",\"birthTime\":\"13:37:01\"}"
+        "{\"gender\":\"MALE\",\"birthDate\":\"2001-02-29\",\"birthTime\":\"13:37\"}",
+        "{\"gender\":\"MALE\",\"birthDate\":\"1986-05-29\",\"birthTime\":\"24:00\"}",
+        "{\"gender\":\"MALE\",\"birthDate\":\"1899-05-29\",\"birthTime\":\"13:37\"}",
+        "{\"gender\":\"MALE\",\"birthDate\":\"1986-05-29\",\"birthTime\":\"13:37:01\"}"
     })
     void rejectsInvalidBirthInput(String input) throws Exception {
         mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON).content(input))
@@ -90,7 +91,7 @@ class ApplicationTest {
     void acceptsLunarLeapMonthAndReturnsBothCalendars() throws Exception {
         mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON)
                 .content("""
-                    {"calendarType":"LUNAR","lunarDate":{"year":2023,"month":2,"day":1,"leapMonth":true},"birthTime":"13:37"}
+                    {"gender":"MALE","calendarType":"LUNAR","lunarDate":{"year":2023,"month":2,"day":1,"leapMonth":true},"birthTime":"13:37"}
                     """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.solarDate").value("2023-03-22"))
@@ -107,11 +108,11 @@ class ApplicationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-        "{\"calendarType\":\"UNKNOWN\",\"birthTime\":\"13:37\"}",
-        "{\"calendarType\":\"LUNAR\",\"birthTime\":\"13:37\"}",
-        "{\"calendarType\":\"LUNAR\",\"lunarDate\":{\"year\":2023,\"month\":2,\"day\":1},\"birthTime\":\"13:37\"}",
-        "{\"calendarType\":\"LUNAR\",\"lunarDate\":{\"year\":2024,\"month\":2,\"day\":1,\"leapMonth\":true},\"birthTime\":\"13:37\"}",
-        "{\"calendarType\":\"SOLAR\",\"birthDate\":\"2024-02-10\",\"lunarDate\":{},\"birthTime\":\"13:37\"}"
+        "{\"gender\":\"MALE\",\"calendarType\":\"UNKNOWN\",\"birthTime\":\"13:37\"}",
+        "{\"gender\":\"MALE\",\"calendarType\":\"LUNAR\",\"birthTime\":\"13:37\"}",
+        "{\"gender\":\"MALE\",\"calendarType\":\"LUNAR\",\"lunarDate\":{\"year\":2023,\"month\":2,\"day\":1},\"birthTime\":\"13:37\"}",
+        "{\"gender\":\"MALE\",\"calendarType\":\"LUNAR\",\"lunarDate\":{\"year\":2024,\"month\":2,\"day\":1,\"leapMonth\":true},\"birthTime\":\"13:37\"}",
+        "{\"gender\":\"MALE\",\"calendarType\":\"SOLAR\",\"birthDate\":\"2024-02-10\",\"lunarDate\":{},\"birthTime\":\"13:37\"}"
     })
     void rejectsInvalidCalendarRequests(String input) throws Exception {
         mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON).content(input))
@@ -122,11 +123,46 @@ class ApplicationTest {
     void enrichedFieldsFollowZiHourDayMasterRollover() throws Exception {
         mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON)
                 .content("""
-                    {"birthDate":"1986-05-29","birthTime":"23:00"}
+                    {"gender":"MALE","birthDate":"1986-05-29","birthTime":"23:00"}
                     """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.dayMaster.name").value("甲"))
                 .andExpect(jsonPath("$.pillarDetails[0].stem.tenGod").value("食神"))
                 .andExpect(jsonPath("$.pillarDetails[2].ganZhi").value("甲戌"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"MALE,FORWARD", "FEMALE,REVERSE"})
+    void genderControlsFortuneDirection(String gender, String direction) throws Exception {
+        mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"birthDate\":\"1986-05-29\",\"birthTime\":\"13:37\",\"gender\":\"" + gender + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gender").value(gender))
+                .andExpect(jsonPath("$.fortune.direction").value(direction))
+                .andExpect(jsonPath("$.fortune.decades.length()").value(10))
+                .andExpect(jsonPath("$.fortune.decades[0].annualYears.length()").value(10))
+                .andExpect(jsonPath("$.fortune.ageConvention").value("YEAR_DIFF_PLUS_ONE"));
+    }
+
+    @Test
+    void knownFemaleStartFortuneAndAnnualYear() throws Exception {
+        mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"birthDate":"1983-02-15","birthTime":"20:00","gender":"FEMALE"}
+                    """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.fortune.startTime").value("1989-05-04T18:24:00"))
+                .andExpect(jsonPath("$.fortune.decades[0].ganZhi").value("乙卯"))
+                .andExpect(jsonPath("$.fortune.decades[0].annualYears[0].ganZhi").value("己巳"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"{\"birthDate\":\"1986-05-29\",\"birthTime\":\"13:37\"}",
+        "{\"birthDate\":\"1986-05-29\",\"birthTime\":\"13:37\",\"gender\":null}",
+        "{\"birthDate\":\"1986-05-29\",\"birthTime\":\"13:37\",\"gender\":\"UNKNOWN\"}",
+        "{\"birthDate\":\"1986-05-29\",\"birthTime\":\"13:37\",\"gender\":0}"})
+    void rejectsMissingOrInvalidGender(String input) throws Exception {
+        mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON).content(input))
+                .andExpect(status().isBadRequest());
     }
 }

@@ -12,10 +12,11 @@ const keys = ['year', 'month', 'day', 'hour'] as const
 const isObject = (value: unknown): value is Record<string, any> => typeof value === 'object' && value !== null && !Array.isArray(value)
 const text = (value: unknown, max = 80): value is string => typeof value === 'string' && value.length > 0 && value.length <= max
 const element = (value: unknown) => elements.includes(value as ElementName)
-export const chartId = (birth: BirthSelection) => `${birth.solarDate}T${birth.time}`
+export const chartId = (birth: BirthSelection) => `${birth.solarDate}T${birth.time}${birth.gender ? `|${birth.gender}` : ''}`
 
 function validBirth(value: unknown): value is BirthSelection {
   if (!isObject(value) || !/^\d{4}-\d{2}-\d{2}$/.test(value.solarDate) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(value.time)) return false
+  if (value.gender !== undefined && value.gender !== '' && !['MALE', 'FEMALE'].includes(value.gender)) return false
   if (!['SOLAR', 'LUNAR'].includes(value.calendarType) || value.solarDate < '1900-01-01' || value.solarDate > '2100-12-31') return false
   const [year, month, day] = value.solarDate.split('-').map(Number)
   const date = new Date(Date.UTC(year, month - 1, day))
@@ -24,7 +25,7 @@ function validBirth(value: unknown): value is BirthSelection {
 
 /** Reject old or incomplete snapshots before they can reach the result renderer. */
 function validChart(value: unknown, birth: BirthSelection): value is BaziChart {
-  if (!isObject(value) || value.solarDate !== birth.solarDate || value.birthDateTime !== `${chartId(birth)}:00`
+  if (!isObject(value) || value.solarDate !== birth.solarDate || value.birthDateTime !== `${birth.solarDate}T${birth.time}:00`
       || value.inputCalendar !== birth.calendarType || value.timeZone !== 'UTC+08:00' || value.precision !== 'MINUTE'
       || !text(value.engineVersion) || !text(value.ruleVersion)) return false
   if (!isObject(value.dayMaster) || !text(value.dayMaster.name, 1) || !element(value.dayMaster.element)
@@ -51,7 +52,23 @@ function validChart(value: unknown, birth: BirthSelection): value is BaziChart {
   if (!isObject(value.elementCounts)) return false
   const expected = Object.fromEntries(elements.map(name => [name, 0]))
   for (const p of value.pillarDetails) { expected[p.stem.element]++; expected[p.branch.element]++ }
-  return elements.every(name => value.elementCounts[name] === expected[name])
+  if (!elements.every(name => value.elementCounts[name] === expected[name])) return false
+  if (!birth.gender) return value.gender == null && value.fortune == null // legacy snapshots remain viewable
+  if (value.gender !== birth.gender || !isObject(value.fortune)) return false
+  const f = value.fortune
+  if (!['FORWARD', 'REVERSE'].includes(f.direction) || !text(f.ruleVersion) || !text(f.startTime)
+      || !Number.isFinite(Date.parse(f.startTime)) || f.ageConvention !== 'YEAR_DIFF_PLUS_ONE'
+      || !isObject(f.startInterval) || !['years','months','days','hours','minutes'].every(k => Number.isInteger(f.startInterval[k]) && f.startInterval[k] >= 0)
+      || !Array.isArray(f.decades) || f.decades.length !== 10) return false
+  const cycle = (item: unknown) => isObject(item) && text(item.ganZhi, 2) && isObject(item.stem)
+    && text(item.stem.name, 1) && element(item.stem.element) && text(item.stem.tenGod, 8)
+    && isObject(item.branch) && text(item.branch.name, 1) && element(item.branch.element) && text(item.naYin, 12)
+  return f.decades.every((decade: any, index: number) => cycle(decade) && decade.index === index + 1
+    && Number.isInteger(decade.startYear) && decade.startYear === f.decades[0].startYear + index * 10
+    && decade.endYear === decade.startYear + 9 && Number.isInteger(decade.startAge) && decade.startAge > 0
+    && decade.startAge === f.decades[0].startAge + index * 10 && decade.endAge === decade.startAge + 9
+    && Array.isArray(decade.annualYears) && decade.annualYears.length === 10
+    && decade.annualYears.every((year: any, j: number) => cycle(year) && year.year === decade.startYear + j && year.age === decade.startAge + j))
 }
 
 function validRecord(value: unknown): value is SavedChart {
@@ -88,11 +105,14 @@ export function writeLibrary(storage: LocalStoragePort | undefined, library: Cha
   }
 }
 
-/** Identity is the solar minute, so equivalent solar/lunar input updates one slot. */
+/** Identity is the solar minute plus gender; equivalent solar/lunar input updates one slot. */
 export function saveChart(library: ChartLibrary, birth: BirthSelection, chart: BaziChart, replaceId?: string, now = new Date().toISOString()): ChartLibrary | null {
   if (!validBirth(birth) || !validChart(chart, birth)) throw new Error('无法保存不完整的排盘结果，请重新排盘。')
   const id = chartId(birth)
-  const existing = library.records.findIndex(record => record.id === id)
+  let existing = library.records.findIndex(record => record.id === id)
+  // Explicit recalculation with a chosen gender upgrades the corresponding legacy slot.
+  if (existing < 0 && birth.gender) existing = library.records.findIndex(record => !record.birth.gender
+    && record.birth.solarDate === birth.solarDate && record.birth.time === birth.time)
   const replacing = replaceId ? library.records.findIndex(record => record.id === replaceId) : -1
   if (existing === -1 && library.records.length >= MAX_LOCAL_CHARTS && replacing === -1) return null
   const index = existing >= 0 ? existing : replacing >= 0 ? replacing : library.records.length

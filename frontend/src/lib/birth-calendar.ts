@@ -1,8 +1,8 @@
-import type { BirthInput } from '../api/bazi'
+import type { BirthInput, BirthGender } from '../api/bazi'
 import { LunarDay, LunarMonth, LunarYear, SolarDay, SolarMonth } from 'tyme4ts'
 
 export type CalendarType = 'SOLAR' | 'LUNAR'
-export interface BirthSelection { solarDate: string; time: string; calendarType: CalendarType }
+export interface BirthSelection { solarDate: string; time: string; calendarType: CalendarType; gender?: BirthGender | '' }
 export interface DateParts { year: number; month: number; day: number }
 export interface Choice { value: number; text: string }
 export const MIN_DATE = '1900-01-01'
@@ -74,11 +74,12 @@ export function normalizeParts(type: CalendarType, parts: DateParts): DateParts 
 }
 
 export function toBirthInput(selection: BirthSelection): BirthInput {
+  if (!selection.gender) throw new Error('请选择性别以计算起运与大运')
   if (selection.calendarType === 'SOLAR') {
-    return { calendarType: 'SOLAR', birthDate: selection.solarDate, birthTime: selection.time }
+    return { calendarType: 'SOLAR', birthDate: selection.solarDate, birthTime: selection.time, gender: selection.gender }
   }
   const lunar = solarToLunar(selection.solarDate)
-  return { calendarType: 'LUNAR', birthTime: selection.time, lunarDate: {
+  return { calendarType: 'LUNAR', birthTime: selection.time, gender: selection.gender, lunarDate: {
     year: lunar.getYear(), month: lunar.getLunarMonth().getMonth(),
     day: lunar.getDay(), leapMonth: lunar.getLunarMonth().isLeap(),
   } }

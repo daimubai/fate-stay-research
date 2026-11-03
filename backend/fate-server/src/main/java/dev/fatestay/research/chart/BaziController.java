@@ -17,6 +17,12 @@ public class BaziController {
 
     @PostMapping("/charts")
     public BaziCalculator.Chart calculate(@Valid @RequestBody BirthRequest input) {
+        BaziCalculator.BirthGender gender;
+        try {
+            gender = BaziCalculator.BirthGender.valueOf(input.gender());
+        } catch (IllegalArgumentException error) {
+            throw new IllegalArgumentException("性别仅支持 MALE（男）或 FEMALE（女）");
+        }
         CalendarType type = input.calendarType() == null ? CalendarType.SOLAR : input.calendarType();
         if (type == CalendarType.LUNAR) {
             LunarInput lunar = input.lunarDate();
@@ -25,18 +31,18 @@ public class BaziController {
                 throw new IllegalArgumentException("农历模式请仅提供完整的农历年月日和闰月标记");
             }
             return calculator.calculateLunar(lunar.year(), lunar.month(), lunar.day(),
-                    lunar.leapMonth(), input.birthTime());
+                    lunar.leapMonth(), input.birthTime(), gender);
         }
         if (input.birthDate() == null || input.lunarDate() != null) {
             throw new IllegalArgumentException("公历模式请仅提供有效的公历出生日期");
         }
-        return calculator.calculate(input.birthDate().atTime(input.birthTime()));
+        return calculator.calculate(input.birthDate().atTime(input.birthTime()), gender);
     }
 
     public enum CalendarType { SOLAR, LUNAR }
     public record LunarInput(Integer year, Integer month, Integer day, Boolean leapMonth) {}
     public record BirthRequest(CalendarType calendarType, LocalDate birthDate,
-                               LunarInput lunarDate, @NotNull LocalTime birthTime) {}
+                               LunarInput lunarDate, @NotNull LocalTime birthTime, @NotNull String gender) {}
     public record InputError(String message) {}
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -48,6 +54,6 @@ public class BaziController {
     @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     InputError invalidRequest() {
-        return new InputError("请提供有效的历法、出生日期和时间；公历格式为 YYYY-MM-DD，时间为 HH:mm");
+        return new InputError("请提供有效的性别、历法、出生日期和时间；公历格式为 YYYY-MM-DD，时间为 HH:mm");
     }
 }

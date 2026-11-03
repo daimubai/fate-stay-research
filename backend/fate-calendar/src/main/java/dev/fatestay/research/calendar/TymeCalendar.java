@@ -1,6 +1,8 @@
 package dev.fatestay.research.calendar;
 
 import com.tyme.eightchar.EightChar;
+import com.tyme.eightchar.ChildLimit;
+import com.tyme.enums.Gender;
 import com.tyme.sixtycycle.SixtyCycle;
 import com.tyme.sixtycycle.HeavenStem;
 import java.util.ArrayList;
@@ -59,6 +61,50 @@ public final class TymeCalendar {
     public record PillarDetail(String key, String label, String ganZhi, Stem stem, Branch branch,
                                List<HiddenStem> hiddenStems, String naYin) {}
     public record Analysis(Pillars pillars, DayMaster dayMaster, List<PillarDetail> pillarDetails) {}
+
+    public FortuneTimeline fortune(LocalDateTime time, boolean male) {
+        var solar = SolarTime.fromYmdHms(time.getYear(), time.getMonthValue(), time.getDayOfMonth(),
+                time.getHour(), time.getMinute(), 0);
+        // Use Tyme4j's default ChildLimit provider; this application never mutates global providers.
+        var limit = ChildLimit.fromSolarTime(solar, male ? Gender.MAN : Gender.WOMAN);
+        var dayMaster = solar.getSixtyCycleHour().getEightChar().getDay().getHeavenStem();
+        List<Decade> decades = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            var decade = limit.getStartDecadeFortune().next(i);
+            var cycle = decade.getSixtyCycle();
+            List<AnnualYear> years = new ArrayList<>();
+            for (int j = 0; j < 10; j++) {
+                // Fortune.getSixtyCycle() is a minor fortune, NOT the annual Gan-Zhi.
+                var year = decade.getStartSixtyCycleYear().next(j);
+                var annual = year.getSixtyCycle();
+                years.add(new AnnualYear(year.getYear(), decade.getStartAge() + j, annual.getName(),
+                        stem(annual, dayMaster), branch(annual), annual.getSound().getName()));
+            }
+            decades.add(new Decade(i + 1, cycle.getName(), decade.getStartAge(), decade.getEndAge(),
+                    decade.getStartSixtyCycleYear().getYear(), decade.getEndSixtyCycleYear().getYear(),
+                    stem(cycle, dayMaster), branch(cycle), cycle.getSound().getName(), List.copyOf(years)));
+        }
+        var start = limit.getEndTime();
+        return new FortuneTimeline("tyme-default-child-limit-v1", limit.isForward() ? "FORWARD" : "REVERSE",
+                LocalDateTime.of(start.getYear(), start.getMonth(), start.getDay(), start.getHour(), start.getMinute(), start.getSecond()),
+                new StartInterval(limit.getYearCount(), limit.getMonthCount(), limit.getDayCount(),
+                        limit.getHourCount(), limit.getMinuteCount()), "YEAR_DIFF_PLUS_ONE", List.copyOf(decades));
+    }
+
+    private Stem stem(SixtyCycle cycle, HeavenStem dayMaster) {
+        var stem = cycle.getHeavenStem();
+        return new Stem(stem.getName(), stem.getElement().getName(), dayMaster.getTenStar(stem).getName());
+    }
+    private Branch branch(SixtyCycle cycle) {
+        var branch = cycle.getEarthBranch();
+        return new Branch(branch.getName(), branch.getElement().getName());
+    }
+    public record StartInterval(int years, int months, int days, int hours, int minutes) {}
+    public record AnnualYear(int year, int age, String ganZhi, Stem stem, Branch branch, String naYin) {}
+    public record Decade(int index, String ganZhi, int startAge, int endAge, int startYear, int endYear,
+                         Stem stem, Branch branch, String naYin, List<AnnualYear> annualYears) {}
+    public record FortuneTimeline(String ruleVersion, String direction, LocalDateTime startTime,
+                                  StartInterval startInterval, String ageConvention, List<Decade> decades) {}
 
     public LocalDate toSolar(int year, int month, int day, boolean leapMonth) {
         if (year < 1899 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 30) {

@@ -17,7 +17,7 @@
 `POST /api/v1/bazi/charts`：公开、无状态的四柱计算接口，不存储出生信息。该路径单独豁免 CSRF；其他路径仍保持默认安全限制。
 
 ```json
-{"birthDate":"1986-05-29","birthTime":"13:37"}
+{"birthDate":"1986-05-29","birthTime":"13:37","gender":"MALE"}
 ```
 
 成功响应示例：
@@ -46,15 +46,16 @@
 {"message":"请提供有效的历法、出生日期和时间；公历格式为 YYYY-MM-DD，时间为 HH:mm"}
 ```
 
-范围或精度错误会返回对应的具体中文说明。已提供十神、藏干、五行和纳音，尚未实现大运、流年或服务端排盘保存；前端支持最多 3 份未登录本机记录。
+范围或精度错误会返回对应的具体中文说明。已提供十神、藏干、五行、纳音、起运、大运及流年，尚未实现服务端排盘保存；前端支持最多 3 份未登录本机记录。
 
 ### 公历与农历输入
 
-公历请求可以显式指定 `calendarType: "SOLAR"`，省略时仍按公历处理，兼容原接口。公历模式仅提供 `birthDate`；农历模式仅提供 `lunarDate`，不要混传两种日期。
+公历请求可以显式指定 `calendarType: "SOLAR"`，省略时仍按公历处理；新请求必须提供性别 `gender`。公历模式仅提供 `birthDate`；农历模式仅提供 `lunarDate`，不要混传两种日期。
 
 ```json
 {
   "calendarType":"LUNAR",
+  "gender":"MALE",
   "lunarDate":{"year":2023,"month":2,"day":1,"leapMonth":true},
   "birthTime":"13:37"
 }
@@ -97,3 +98,23 @@
 ```
 
 该样例的表层五行计数为 `{"木":1,"火":2,"土":2,"金":1,"水":2}`。23:00 换日后使用新的日干重新计算所有十神，展示日期仍按零点换日。
+
+### 性别、起运、大运和流年
+
+新排盘请求必须提供 `gender: "MALE" | "FEMALE"`，缺少、null 或非法值返回 400，不默认猜测性别。性别不改变四柱，但用于传统起运顺逆规则。
+
+响应新增 `gender` 与 `fortune`：
+
+- `fortune.ruleVersion`：`tyme-default-child-limit-v1`；固定使用 Tyme4j 1.5.2 默认童限算法，本应用不改动全局 provider。
+- `direction`：`FORWARD` / `REVERSE`，依据年干阴阳和性别（阳男阴女顺、阴男阳女逆）。
+- `startTime`：起运公历时刻，按响应中的 UTC+08:00 解释。
+- `startInterval: {years, months, days, hours, minutes}`：出生至起运的折算间隔，按节令时差三天折一年计算，不是日历实岁差的简写。
+- `ageConvention`：`YEAR_DIFF_PLUS_ONE`。大运与流年的年龄是库返回的年序虚岁，即对应年份减出生公历年加 1，不是周岁。
+- `decades`：前 10 步大运，按时间顺序返回。每项含 `index`（1 起）、`ganZhi`、`startAge`、`endAge`、`startYear`、`endYear`、`stem`、`branch`、`naYin` 和 `annualYears`。
+- `annualYears`：每步包含连续 10 年，每项有 `year`、`age`、`ganZhi`、`stem`、`branch`、`naYin`。十神以出生时的日干为参照。
+
+示例：`{"birthDate":"1983-02-15","birthTime":"20:00","gender":"FEMALE"}` 返回顺排，起运 `1989-05-04T18:24:00`，间隔 6 年 2 月 18 日 22 小时 24 分。首步乙卯大运为 1989–1998 年、7–16 岁；首个流年 1989 己巳，而不是小运辛巳。
+
+流年干支取 Tyme4j 的 `SixtyCycleYear`，不使用表示小运的 `Fortune.getSixtyCycle()`。逆排只影响大运干支方向，流年始终按年份递增。
+
+流年按干支年（立春起）标注，`startYear/endYear` 用于年份分组；起运及交运年份需要结合实际交运时刻区分，不能视为整年都属于同一步大运。当前不展开起运前童限、小运、流月或流日。出生范围仍为公历 1900–2100，大运输出可自然延伸至 2100 年之后。

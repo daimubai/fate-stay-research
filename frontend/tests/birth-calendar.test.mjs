@@ -40,10 +40,14 @@ test('lunar choices at both range edges remain within supported solar dates', ()
 })
 
 test('leap-month API payload uses positive month plus explicit leap flag', () => {
-  assert.deepEqual(toBirthInput({ solarDate: '2023-03-22', time: '13:37', calendarType: 'LUNAR' }), {
-    calendarType: 'LUNAR', birthTime: '13:37', lunarDate: { year: 2023, month: 2, day: 1, leapMonth: true },
+  assert.deepEqual(toBirthInput({ solarDate: '2023-03-22', time: '13:37', calendarType: 'LUNAR', gender: 'MALE' }), {
+    calendarType: 'LUNAR', birthTime: '13:37', gender: 'MALE', lunarDate: { year: 2023, month: 2, day: 1, leapMonth: true },
   })
-  assert.deepEqual(toBirthInput({ solarDate: '2023-03-22', time: '13:37', calendarType: 'SOLAR' }), {
-    calendarType: 'SOLAR', birthDate: '2023-03-22', birthTime: '13:37',
+  assert.deepEqual(toBirthInput({ solarDate: '2023-03-22', time: '13:37', calendarType: 'SOLAR', gender: 'MALE' }), {
+    calendarType: 'SOLAR', birthDate: '2023-03-22', birthTime: '13:37', gender: 'MALE',
   })
+})
+
+test('gender must be explicitly selected before sending a new chart request', () => {
+  assert.throws(() => toBirthInput({ solarDate: '2023-03-22', time: '13:37', calendarType: 'SOLAR' }), /性别/)
 })

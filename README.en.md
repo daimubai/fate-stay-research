@@ -111,6 +111,8 @@ New requests require `gender: MALE/FEMALE`. Tyme4j default child-limit rules pro
 
 Annual-year selection now loads twelve Jie-based flow months; selecting a month loads Gan-Zhi days. Month boundaries use exact solar-term times; days change at 23:00 and are clipped at the month's boundaries. Results include solar/lunar labels, precise intervals, ten gods, elements and Na Yin. Details are fetched on demand with bounded page-memory reuse, cancellation and independent retry; they are not added to local snapshots and need the backend when not already loaded.
 
+Selected flow days now expose twelve double-hours (Zi from the previous date at 23:00 through Hai ending at 23:00). Each shows Gan-Zhi, ten god relative to the birth day master, elements and Na Yin. Standard intervals are distinguished from their actual overlap with the selected Jie-clipped day; outside hours remain reference-only, with no fabricated active interval. Hour details have independent retry, stale-request cancellation and bounded page-memory reuse.
+
 ## Guest local records
 
 Successful charts automatically save the birth input and full result in this browser, up to three slots. Equivalent solar/lunar inputs with the same gender update one slot. Different genders use separate slots; explicitly recalculating a legacy snapshot upgrades its original slot. Switch, rename, delete or explicitly replace records; refresh restores the active snapshot without recalculation. The result section also offers quick switching. Account login and cloud storage remain future work. Clearing site data removes local records; unavailable storage falls back to in-page use with a notice. See [local library notes](docs/local-chart-library.md).

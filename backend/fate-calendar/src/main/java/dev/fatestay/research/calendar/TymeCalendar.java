@@ -6,6 +6,7 @@ import com.tyme.enums.Gender;
 import com.tyme.sixtycycle.SixtyCycle;
 import com.tyme.sixtycycle.SixtyCycleMonth;
 import com.tyme.sixtycycle.SixtyCycleYear;
+import com.tyme.sixtycycle.SixtyCycleDay;
 import com.tyme.solar.SolarTerm;
 import java.time.Duration;
 import com.tyme.sixtycycle.HeavenStem;
@@ -146,6 +147,35 @@ public final class TymeCalendar {
         return new FlowDays(year, monthIndex, "jie-month-zi23-day-v1",
                 new DayMaster(master.getName(), master.getElement().getName()), month, List.copyOf(days));
     }
+
+    public FlowHours flowHours(int year, int monthIndex, LocalDate date, String dayStem) {
+        var flowDays = flowDays(year, monthIndex, dayStem);
+        var day = flowDays.days().stream().filter(item -> item.date().equals(date)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("流日不属于所选节令流月，请重新选择"));
+        var master = HeavenStem.fromName(dayStem);
+        var cycleDay = SixtyCycleDay.fromSolarDay(SolarDay.fromYmd(date.getYear(), date.getMonthValue(), date.getDayOfMonth()));
+        List<FlowHour> hours = new ArrayList<>();
+        int index = 0;
+        for (var hour : cycleDay.getHours()) {
+            var nominalStart = localTime(hour.getSolarTime());
+            var nominalEnd = nominalStart.plusHours(2);
+            var start = nominalStart.isAfter(day.startTime()) ? nominalStart : day.startTime();
+            var end = nominalEnd.isBefore(day.endTime()) ? nominalEnd : day.endTime();
+            boolean included = start.isBefore(end);
+            var cycle = hour.getSixtyCycle();
+            hours.add(new FlowHour(++index, cycle.getEarthBranch().getName() + "时", nominalStart, nominalEnd,
+                    included ? start : null, included ? end : null, included,
+                    included && (!start.equals(nominalStart) || !end.equals(nominalEnd)),
+                    cycle.getName(), stem(cycle, master), branch(cycle), cycle.getSound().getName()));
+        }
+        return new FlowHours(year, monthIndex, date, "zi23-two-hour-jie-clip-v1", flowDays.dayMaster(), day, List.copyOf(hours));
+    }
+
+    public record FlowHour(int index, String name, LocalDateTime nominalStartTime, LocalDateTime nominalEndTime,
+                           LocalDateTime startTime, LocalDateTime endTime, boolean included, boolean partial,
+                           String ganZhi, Stem stem, Branch branch, String naYin) {}
+    public record FlowHours(int year, int monthIndex, LocalDate date, String ruleVersion,
+                            DayMaster dayMaster, FlowDay day, List<FlowHour> hours) {}
 
     private LocalDateTime localTime(SolarTime time) {
         return LocalDateTime.of(time.getYear(), time.getMonth(), time.getDay(), time.getHour(), time.getMinute(), time.getSecond());

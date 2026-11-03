@@ -61,3 +61,16 @@ export async function getFlowMonths(input: FlowInput, signal?: AbortSignal): Pro
 export async function getFlowDays(input: FlowInput & { monthIndex: number }, signal?: AbortSignal): Promise<FlowDays> {
   return (await axios.post<FlowDays>('/api/v1/bazi/flow-days', input, { timeout: 10000, signal })).data
 }
+
+export interface FlowHour {
+  index: number; name: string; nominalStartTime: string; nominalEndTime: string
+  startTime: string | null; endTime: string | null; included: boolean; partial: boolean
+  ganZhi: string; stem: StemDetail; branch: { name: string; element: ElementName }; naYin: string
+}
+export interface FlowHours {
+  year: number; monthIndex: number; date: string; ruleVersion: string
+  dayMaster: BaziChart['dayMaster']; day: FlowDay; hours: FlowHour[]
+}
+export async function getFlowHours(input: FlowInput & { monthIndex: number; date: string }, signal?: AbortSignal): Promise<FlowHours> {
+  return (await axios.post<FlowHours>('/api/v1/bazi/flow-hours', input, { timeout: 10000, signal })).data
+}

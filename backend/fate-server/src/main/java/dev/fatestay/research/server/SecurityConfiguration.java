@@ -10,9 +10,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/bazi/charts", "/api/v1/bazi/flow-months", "/api/v1/bazi/flow-days"))
+        return http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/bazi/charts", "/api/v1/bazi/flow-months", "/api/v1/bazi/flow-days", "/api/v1/bazi/flow-hours"))
                 .authorizeHttpRequests(requests -> requests
-                .requestMatchers(HttpMethod.POST, "/api/v1/bazi/charts", "/api/v1/bazi/flow-months", "/api/v1/bazi/flow-days").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/bazi/charts", "/api/v1/bazi/flow-months", "/api/v1/bazi/flow-days", "/api/v1/bazi/flow-hours").permitAll()
                 .requestMatchers("/api/v1/health", "/actuator/health").permitAll()
                 .anyRequest().denyAll())
                 .build();

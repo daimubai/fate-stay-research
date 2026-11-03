@@ -50,6 +50,14 @@ public class BaziController {
         return calculator.flowDays(input.birthDate().atTime(input.birthTime()), input.year(), input.monthIndex());
     }
 
+    @PostMapping("/flow-hours")
+    public TymeCalendar.FlowHours flowHours(@Valid @RequestBody FlowHourRequest input) {
+        return calculator.flowHours(input.birthDate().atTime(input.birthTime()), input.year(), input.monthIndex(), input.date());
+    }
+
+    public record FlowHourRequest(@NotNull LocalDate birthDate, @NotNull LocalTime birthTime, @NotNull Integer year,
+                                  @NotNull Integer monthIndex, @NotNull LocalDate date) {}
+
     public record FlowMonthRequest(@NotNull LocalDate birthDate, @NotNull LocalTime birthTime, @NotNull Integer year) {}
     public record FlowDayRequest(@NotNull LocalDate birthDate, @NotNull LocalTime birthTime, @NotNull Integer year,
                                  @NotNull Integer monthIndex) {}

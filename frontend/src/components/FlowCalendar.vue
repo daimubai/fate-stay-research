@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import { getFlowDays, getFlowMonths, type FlowDays, type FlowMonths } from '../api/bazi'
+import FlowHours from './FlowHours.vue'
+import { getFlowDays, getFlowMonths, type FlowDays, type FlowMonths, type FlowHours as FlowHoursData } from '../api/bazi'
 
 const props = defineProps<{ year: number; birthDateTime: string }>()
 const months = ref<FlowMonths | null>(null)
@@ -17,6 +18,7 @@ const month = computed(() => months.value?.months.find(item => item.index === mo
 const day = computed(() => days.value?.days.find(item => item.date === selectedDate.value) ?? days.value?.days[0])
 const monthCache = new Map<string, FlowMonths>()
 const dayCache = new Map<string, FlowDays>()
+const hourCache = new Map<string, FlowHoursData>()
 let monthRequest = 0
 let dayRequest = 0
 let monthAbort: AbortController | undefined
@@ -71,7 +73,7 @@ onBeforeUnmount(() => { monthRequest++; dayRequest++; monthAbort?.abort(); dayAb
 
 <template>
   <section class="flow-calendar" aria-labelledby="flow-months-title">
-    <div class="flow-heading"><div><p>流年 → 流月 → 流日</p><h4 id="flow-months-title">{{ year }}{{ months ? ` ${months.yearGanZhi}` : '' }}年 · 流月</h4></div><span>按节令换月</span></div>
+    <div class="flow-heading"><div><p>流年 → 流月 → 流日 → 流时</p><h4 id="flow-months-title">{{ year }}{{ months ? ` ${months.yearGanZhi}` : '' }}年 · 流月</h4></div><span>按节令换月</span></div>
     <p class="flow-hint">寅月从立春开始，依次至丑月跨入下一公历年；不是公历月或农历月。十神沿用出生日干为参照。</p>
     <div v-if="monthLoading && !months" role="status" class="flow-loading">正在加载 {{ year }} 年流月…</div>
     <div v-if="monthError" class="flow-error" role="alert">{{ monthError }} <button type="button" @click="loadMonths">重试流月</button></div>
@@ -85,11 +87,12 @@ onBeforeUnmount(() => { monthRequest++; dayRequest++; monthAbort?.abort(); dayAb
         <div v-if="dayError" class="flow-error" role="alert">{{ dayError }} <button type="button" @click="loadDays">重试流日</button></div>
         <template v-if="days && day">
           <div class="flow-days" role="group" aria-label="选择流日"><button v-for="item in days.days" :key="item.date" type="button" :aria-pressed="day.date === item.date" :aria-label="`${item.date} ${item.ganZhi}流日`" @click="selectDay(item.date)"><span>{{ item.date.slice(5) }}</span><strong>{{ item.ganZhi }}</strong><small>{{ item.stem.tenGod }}</small><em v-if="item.partial">部分时段</em></button></div>
-          <div ref="dayDetail" class="flow-day-detail" aria-label="流日详情" aria-live="polite"><div><h4>{{ day.date }} · {{ day.ganZhi }}流日</h4><span v-if="day.partial" class="partial-tag">节令截断时段</span></div><p>农历 {{ day.lunarDate.display }}</p><dl><div><dt>天干十神</dt><dd>{{ day.stem.tenGod }}</dd></div><div><dt>干支五行</dt><dd>{{ day.stem.name }}{{ day.stem.element }} · {{ day.branch.name }}{{ day.branch.element }}</dd></div><div><dt>纳音</dt><dd>{{ day.naYin }}</dd></div></dl><p class="flow-time-range">开始（含） {{ timeLabel(day.startTime) }}<br />结束（不含） {{ timeLabel(day.endTime) }}<br />北京时间 UTC+08:00</p><a href="#flow-days-title">返回流日列表 ↑</a></div>
+          <div ref="dayDetail" class="flow-day-detail" aria-label="流日详情" aria-live="polite"><div><h4>{{ day.date }} · {{ day.ganZhi }}流日</h4><span v-if="day.partial" class="partial-tag">节令截断时段</span></div><p>农历 {{ day.lunarDate.display }}</p><dl><div><dt>天干十神</dt><dd>{{ day.stem.tenGod }}</dd></div><div><dt>干支五行</dt><dd>{{ day.stem.name }}{{ day.stem.element }} · {{ day.branch.name }}{{ day.branch.element }}</dd></div><div><dt>纳音</dt><dd>{{ day.naYin }}</dd></div></dl><p class="flow-time-range">开始（含） {{ timeLabel(day.startTime) }}<br />结束（不含） {{ timeLabel(day.endTime) }}<br />北京时间 UTC+08:00</p><a href="#flow-days-title">返回流日列表 ↑</a> <a href="#flow-hours-title" class="view-hours-link">查看十二时辰 ↓</a></div>
+          <FlowHours :year="year" :month-index="monthIndex" :date="day.date" :birth-date-time="birthDateTime" :response-cache="hourCache" />
         </template>
       </section>
     </template>
-    <p class="flow-footnote">流月、流日按需从本地后端加载，已加载内容可在本页重复查看；不写入本机排盘快照，离线时未加载的明细需恢复后端连接后重试。</p>
+    <p class="flow-footnote">流月、流日、流时按需从本地后端加载，已加载内容可在本页重复查看；不写入本机排盘快照，离线时未加载的明细需恢复后端连接后重试。</p>
   </section>
 </template>
 
@@ -132,6 +135,7 @@ onBeforeUnmount(() => { monthRequest++; dayRequest++; monthAbort?.abort(); dayAb
 .flow-day-detail dt { font-size: 10px; color: #94a184; }
 .flow-day-detail dd { font-size: 13px; color: #6b8557; margin: 8px 0 0; }
 .flow-day-detail .flow-time-range { font-size: 11px; padding-top: 14px; border-top: 1px solid #edf1e6; }
+.view-hours-link { margin-left: 18px; }
 .flow-day-detail > a { font-size: 11px; color: #8a9d75; text-decoration: none; }
 @media (max-width:767px) { .flow-months { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; } .flow-months button { padding: 13px 11px; } .flow-days { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; } .flow-day-detail { padding: 16px; } .flow-day-detail dl { gap: 8px; } .flow-day-detail dd { font-size: 12px; line-height: 1.8; } .flow-heading h4 { font-size: 15px; } }
 </style>

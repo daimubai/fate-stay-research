@@ -69,6 +69,14 @@ public final class BaziCalculator {
         return calendar.flowDays(year, monthIndex, chart.dayMaster().name());
     }
 
+    public TymeCalendar.FlowHours flowHours(LocalDateTime birthTime, int year, int monthIndex, LocalDate date) {
+        validateFlowYear(year);
+        if (monthIndex < 1 || monthIndex > 12) throw new IllegalArgumentException("流月序号须为 1–12，寅月为 1");
+        if (date == null) throw new IllegalArgumentException("请选择有效的流日日期");
+        var chart = calculate(birthTime);
+        return calendar.flowHours(year, monthIndex, date, chart.dayMaster().name());
+    }
+
     private void validateFlowYear(int year) {
         if (year < 1900 || year > 2210) throw new IllegalArgumentException("流年须在 1900–2210 年之间");
     }

@@ -23,7 +23,7 @@ A Java-based platform for studying traditional Chinese metaphysics, starting wit
 | Tyme4j | 1.5.2 |
 | MySQL Connector/J and Flyway | Boot BOM-managed, opt-in persistence profile |
 | Node.js / npm | 22.22.0 / 10.9.4 |
-| Vue / TypeScript | 3.5.44 / 7.0.2 |
+| Vue / TypeScript | 3.5.44 / 6.0.3 |
 | Vite / Vue plugin | 8.3.5 / 6.0.10 |
 | Element Plus / Pinia | 2.14.7 / 4.1.0 |
 | Vue Router / Axios / vue-tsc | 5.4.0 / 1.20.0 / 3.3.13 |
@@ -76,9 +76,30 @@ npm run deps:check
 
 `verify` validates the Maven project, while `deps:check` checks frontend dependency relationships. Persistence dependencies are enabled through the optional `persistence` profile.
 
+## Local startup
+
+```sh
+# Terminal 1, repository root (JDK 26)
+./mvnw --batch-mode --no-transfer-progress package
+java -jar backend/fate-server/target/fate-server-0.1.0-SNAPSHOT.jar
+
+# Terminal 2, repository root
+cd frontend
+npm ci --ignore-scripts
+npm run dev
+```
+
+Open http://127.0.0.1:5173. The page calls `/api/v1/health` through the Vite proxy to port 8080. “重新检查” retries the request. Only the application and Actuator health endpoints are public; other routes remain denied. No database is required.
+
+Run `npm run build` for type checking and a production build. `npm run preview` only previews static assets; it does not provide the development API proxy. Production hosting must route `/api` to the backend. If `SERVER_PORT` changes, update the proxy target in `frontend/vite.config.ts` too.
+
+The existing TypeScript 7 / vue-tsc incompatibility was resolved by pinning TypeScript 6.0.3. The vulnerable transitive dependency `follow-redirects` was updated to 1.16.2 in the lockfile.
+
+See [macOS setup](docs/local-development-macos.md) for the MacData environment paths. Calendar and Bazi calculations, accounts and persistence remain unimplemented.
+
 ## Roadmap
 
-1. Add Boot and Vue/Vite entry points, build configuration and development scripts.
+1. Completed Boot and Vue/Vite entry points, health endpoint and local integration.
 2. Implement calculation profiles, calendar/Bazi contracts and independent engine tests.
 3. Select a database version and design the model before enabling persistence, migrations and authentication.
 4. Implement pages, APIs, OpenAPI and deployment configuration.

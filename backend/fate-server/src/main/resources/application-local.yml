@@ -1,0 +1,6 @@
+# Local startup is database-free, including when persistence dependencies are present.
+# Remove this exclusion when adding a real local datasource configuration.
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration

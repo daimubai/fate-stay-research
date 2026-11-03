@@ -5,4 +5,4 @@ spring:
     default: local
 server:
   port: ${SERVER_PORT:8080}
-# No datasource, migrations or authentication implementation in this scaffold.
+# No datasource, migrations or account authentication yet.

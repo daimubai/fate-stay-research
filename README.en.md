@@ -89,18 +89,24 @@ npm ci --ignore-scripts
 npm run dev
 ```
 
-Open http://127.0.0.1:5173. The page calls `/api/v1/health` through the Vite proxy to port 8080. “重新检查” retries the request. Only the application and Actuator health endpoints are public; other routes remain denied. No database is required.
+Open http://127.0.0.1:5173. The page calls `/api/v1/health` through the Vite proxy to port 8080. “重新检查” retries the request. Health endpoints and `POST /api/v1/bazi/charts` are public; other routes remain denied. No database is required.
 
 Run `npm run build` for type checking and a production build. `npm run preview` only previews static assets; it does not provide the development API proxy. Production hosting must route `/api` to the backend. If `SERVER_PORT` changes, update the proxy target in `frontend/vite.config.ts` too.
 
 The existing TypeScript 7 / vue-tsc incompatibility was resolved by pinning TypeScript 6.0.3. The vulnerable transitive dependency `follow-redirects` was updated to 1.16.2 in the lockfile.
 
-See [macOS setup](docs/local-development-macos.md) for the MacData environment paths. Calendar and Bazi calculations, accounts and persistence remain unimplemented.
+See [macOS setup](docs/local-development-macos.md) for the MacData environment paths. Basic four-pillars calculation is available. Fortune cycles, accounts and persistence remain unimplemented.
+
+## Basic four-pillars chart
+
+Choose Gregorian or Chinese lunar birth date input on the homepage; lunar input distinguishes regular and leap months. Both dates are returned and displayed. Inputs support 1900–2100 with minute precision and use fixed UTC+08:00, without daylight-saving or true-solar-time corrections. Tyme4j 1.5.2 rules: Li Chun year boundary, solar-term month boundary, day changes at 23:00. Results include the original input, offset, precision and engine/rule versions. See [API documentation](docs/api/README.md). Fortune cycles and chart persistence are not implemented.
+
+Desktop uses Element Plus date/time controls; mobile uses Vant bottom-sheet wheels with year jump and confirm/cancel. Calendar switching preserves the selected day, and lunar month/day choices use the pinned Tyme4ts adapter. See [picker selection notes](docs/date-time-picker.md). Run `npm test` in `frontend` for adapter tests.
 
 ## Roadmap
 
 1. Completed Boot and Vue/Vite entry points, health endpoint and local integration.
-2. Implement calculation profiles, calendar/Bazi contracts and independent engine tests.
+2. Basic four-pillars calculation, API and independent tests are complete; extend calculation profiles and fortune cycles next.
 3. Select a database version and design the model before enabling persistence, migrations and authentication.
 4. Implement pages, APIs, OpenAPI and deployment configuration.
 5. Extend into other systems, classical texts and AI when needed.

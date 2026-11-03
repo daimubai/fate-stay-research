@@ -4,7 +4,7 @@ Monorepo; separate frontend and backend; modular monolith. Core calculation modu
 
 ```mermaid
 flowchart TD
-    UI[Vue frontend] -. future HTTP /api/v1 .-> Server[fate-server]
+    UI[Vue frontend] -- HTTP /api/v1 --> Server[fate-server]
     Server --> Bazi[fate-bazi]
     Bazi --> Calendar[fate-calendar]
     Bazi --> Common[fate-common]
@@ -19,9 +19,9 @@ flowchart TD
 | fate-bazi | Four pillars, major cycles, annual cycles / 四柱、大运、流年 |
 | fate-server | HTTP, validation, security, orchestration / 接口、校验、认证、领域编排 |
 
-`chart`, `auth`, `rule`, `knowledge`, `ai` are reserved domain folders within the server, not implemented features. Organize each future domain into its own API/application/domain/infrastructure boundaries as needed. Do not let core modules depend on the server or persistence.
+`chart` now provides the minimum four-pillars endpoint; `auth`, `rule`, `knowledge`, `ai` remain reserved folders. Organize each future domain into its own API/application/domain/infrastructure boundaries as needed. Do not let core modules depend on the server or persistence.
 
-`chart`、`auth`、`rule`、`knowledge`、`ai` 仅预留目录。后续在领域内按需划分 API、应用、领域和基础设施，计算核心禁止反向依赖服务端或持久化。
+`chart` 已提供最小四柱接口，其余 `auth`、`rule`、`knowledge`、`ai` 仅预留目录。后续在领域内按需划分 API、应用、领域和基础设施，计算核心禁止反向依赖服务端或持久化。
 
 Future calculation profiles must preserve original birth input, time zone, location, input precision and calculation strategy. Snapshots should record engine/rule versions for reproducibility. These are design constraints, not database definitions.
 
@@ -30,3 +30,7 @@ Future calculation profiles must preserve original birth input, time zone, locat
 Profiles `local`, `test`, `prod` are planned; only the default profile name is configured. Java 27 remains experimental. AI frameworks, vector databases and rule engines are deferred.
 
 规划 local、test、prod 环境，当前仅设置默认环境名。Java 27 仅作为未来实验验证，暂不引入 AI 框架、向量库和复杂规则引擎。
+
+## Current four-pillars flow
+
+`BaziController` validates request input → framework-independent `BaziCalculator` checks range/precision and records policy metadata → `TymeCalendar` adapts the pinned Tyme4j API. The adapter uses explicit SixtyCycle rules instead of changing a global LunarHour provider. No database or framework dependency is added to the calculation modules.

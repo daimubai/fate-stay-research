@@ -27,3 +27,72 @@ button:focus-visible { outline: 3px solid #95b8a7; outline-offset: 3px; }
 button:disabled { opacity: .6; cursor: wait; }
 .note { margin: 22px 0; }
 @media (max-width: 520px) { main { padding: 24px 20px; } .intro { padding-top: 52px; } .panel-heading, .connection { padding-left: 20px; padding-right: 20px; } .panel-footer { padding: 16px 20px; } }
+.chart-panel { margin-bottom: 24px; }
+.chart-panel form { padding: 24px 28px 16px; }
+.policy, .result-input, .engine { font-size: 12px; color: #66776e; line-height: 1.8; }
+.policy { margin: 18px 0 0; }
+.chart-error { color: #a14336; font-size: 14px; margin: 0; padding: 0 28px 24px; }
+.chart-result { padding: 20px 28px; border-top: 1px solid #edf0ed; }
+.result-input { margin: 0 0 18px; }
+.pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.pillar { padding: 18px 8px; border-radius: 10px; background: #f2f6f2; text-align: center; }
+.pillar h3 { font-size: 13px; font-weight: 400; color: #66776e; margin: 0 0 12px; }
+.pillar strong { font-size: 28px; font-weight: 550; }
+.engine { overflow-wrap: anywhere; margin-bottom: 0; }
+@media (max-width: 520px) { .chart-panel form, .chart-result { padding-left: 20px; padding-right: 20px; } .pillars { gap: 6px; } .pillar strong { font-size: 24px; } }
+.calendar-results { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+.calendar-results p { margin: 0; padding: 14px; background: #f2f6f2; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; }
+.calendar-results span { color: #66776e; font-size: 12px; }
+.calendar-results strong { font-size: 14px; font-weight: 500; line-height: 1.6; }
+@media (max-width: 520px) { .calendar-results { grid-template-columns: 1fr; } }
+/* Shared birth input, with desktop Element Plus controls and mobile Vant sheets. */
+html:root { --el-color-primary: #254f44; --el-color-primary-light-3: #557e6f; --el-color-primary-light-5: #8ca99e; --el-color-primary-light-9: #f0f5f2; --el-border-radius-base: 9px; --van-primary-color: #254f44; --van-picker-confirm-action-color: #254f44; }
+.birth-picker-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 25px; }
+.field-caption { display: block; font-size: 13px; font-weight: 550; color: #53685e; margin-bottom: 10px; }
+.birth-picker-top > .field-caption { margin: 0; }
+.calendar-tabs { display: flex; padding: 4px; border: 1px solid #e1e8e1; background: #f4f6f3; border-radius: 11px; gap: 4px; }
+.calendar-tabs button { background: transparent; color: #697b70; padding: 8px 15px; min-height: 36px; white-space: nowrap; }
+.calendar-tabs button[aria-pressed="true"] { color: #254f44; background: white; box-shadow: 0 1px 5px #1d3b2b12; font-weight: 600; }
+.desktop-birth-fields { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 22px; }
+.desktop-birth-fields .el-date-editor, .desktop-birth-fields .el-select { width: 100%; height: 46px; }
+.desktop-birth-fields .el-input__wrapper { min-height: 46px; }
+.lunar-desktop-row { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 8px; }
+.dual-date-cell { height: 44px; display: flex; flex-direction: column; justify-content: center; line-height: 20px; border-radius: 7px; }
+.dual-date-cell small { color: #8a968d; font-size: 10px; line-height: 15px; }
+.birth-date-popper .el-date-table td { height: 50px; }
+.birth-date-popper .el-date-table-cell { height: 46px; padding: 0 2px; }
+.birth-date-popper td.current .dual-date-cell { background: #254f44; color: white; }
+.birth-date-popper td.current small { color: #dae9df; }
+.birth-preview { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 20px; background: #f3f6f2; border: 1px solid #e6ece5; padding: 13px 16px; border-radius: 9px; font-size: 12px; color: #65786c; line-height: 1.8; min-height: 48px; }
+.birth-preview b { margin-left: 8px; color: #345345; font-weight: 500; }
+.picker-hint { font-size: 12px; line-height: 1.7; color: #7c8b80; margin: 10px 0 0; }
+.birth-submit-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 25px; padding-top: 22px; border-top: 1px solid #edf0ed; }
+.birth-submit-row p { font-size: 12px; line-height: 1.8; color: #7c8b80; margin: 0; }
+.birth-submit-row > button { min-height: 46px; padding: 12px 26px; white-space: nowrap; font-size: 14px; }
+.birth-submit-row > button span { margin-left: 14px; }
+.mobile-birth-fields { display: grid; gap: 12px; }
+.picker-trigger { width: 100%; display: flex; justify-content: space-between; align-items: center; background: white; border: 1px solid #d6dfd5; border-radius: 12px; color: #263b37; text-align: left; padding: 15px 16px; min-height: 80px; }
+.picker-trigger:hover { background: #fafcf9; }
+.picker-trigger small { display: block; color: #78877b; font-size: 12px; margin-bottom: 8px; }
+.picker-trigger strong { font-size: 16px; font-weight: 550; }
+.picker-trigger .placeholder { color: #9ba59c; font-weight: 400; }
+.picker-chevron { color: #8b9d8e; font-size: 28px; font-weight: 300; }
+.birth-sheet { --van-popup-round-radius: 22px; --van-picker-option-font-size: 18px; --van-picker-title-font-size: 16px; --van-picker-confirm-action-color: #254f44; --van-picker-cancel-action-color: #77877c; --van-picker-background: #fff; max-height: 94dvh; overflow-y: auto; }
+.sheet-handle { width: 34px; height: 4px; border-radius: 8px; background: #d8e0d7; margin: 10px auto 17px; }
+.sheet-heading { padding: 0 22px; }
+.sheet-heading h3 { font-size: 19px; margin: 0 0 8px; font-weight: 600; }
+.sheet-heading p { color: #859184; margin: 0; font-size: 12px; }
+.sheet-tabs { margin: 20px 22px 12px; }
+.sheet-tabs button { flex: 1; }
+.sheet-preview { margin: 10px 22px 0; padding: 12px 8px; border-radius: 8px; background: #f3f6f2; color: #61745f; text-align: center; font-size: 12px; line-height: 1.7; }
+.sheet-note { margin: 0; padding: 8px 20px 20px; text-align: center; color: #8a9589; font-size: 11px; line-height: 1.8; }
+.birth-sheet .van-picker__toolbar button { background: transparent; font-size: 14px; border-radius: 0; }
+@media (max-width: 767px) { .birth-picker-top { align-items: stretch; flex-direction: column; gap: 12px; margin-bottom: 20px; } .birth-picker-top .calendar-tabs button { flex: 1; } .birth-submit-row { flex-direction: column; align-items: stretch; gap: 16px; } .birth-submit-row p { font-size: 11px; } .birth-submit-row > button { min-height: 49px; width: 100%; } .birth-preview { display: grid; gap: 4px; padding: 12px; } .picker-hint { font-size: 11px; } }
+.year-jump { display: flex; align-items: center; gap: 10px; padding: 0 22px; margin: 10px 0; }
+.year-jump label { font-size: 12px; color: #7b8b7b; }
+.year-jump input { width: 84px; padding: 7px 10px; border: 1px solid #dce4d9; border-radius: 7px; font: inherit; font-size: 14px; color: #35523b; background: #fff; }
+.year-jump button { padding: 8px 13px; background: #edf3ec; color: #3c6345; font-size: 12px; }
+.year-jump-error { margin: 0 22px 8px; color: #a14336; font-size: 12px; }
+
+.birth-picker .desktop-birth-fields .el-date-editor.el-input { width: 100%; }
+.birth-picker .desktop-birth-fields .el-select__wrapper { min-height: 46px; }

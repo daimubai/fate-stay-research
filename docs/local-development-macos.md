@@ -4,15 +4,15 @@
 
 ## 当前项目状态
 
-已补齐 Spring Boot 和 Vue/Vite 入口。前端首页会请求后端健康接口，显示连接状态并支持重新检查；历法、八字、账户和数据库功能仍未实现。
+已补齐 Spring Boot 和 Vue/Vite 入口。前端首页会请求后端健康接口，显示连接状态并支持重新检查；已提供基础八字排盘表单与四柱接口，账户、数据库、大运和流年仍未实现。
 
 | 目录 | 职责与当前内容 |
 | --- | --- |
 | `backend/fate-common` | 公共类型，尚为空模块 |
-| `backend/fate-calendar` | 历法核心，已声明 Tyme4j，尚无业务代码 |
-| `backend/fate-bazi` | 八字核心，尚无业务代码 |
-| `backend/fate-server` | Boot 入口、健康接口、安全配置及集成测试 |
-| `frontend` | Vue 入口、连接检查页面、Vite 代理及构建脚本 |
+| `backend/fate-calendar` | Tyme4j 四柱历法适配 |
+| `backend/fate-bazi` | 独立四柱计算、策略元数据与核心测试 |
+| `backend/fate-server` | Boot 入口、健康/排盘接口、安全配置及集成测试 |
+| `frontend` | Vue 入口、四柱表单与结果、连接检查、Vite 代理及构建脚本 |
 | `docs`、`deploy` | 设计及本地启动文档，尚无生产部署配置 |
 
 ## 本地启动
@@ -84,3 +84,7 @@ npm run deps:check
 原锁文件的 `follow-redirects` 高危漏洞已通过更新至 1.16.2 修复，`npm audit` 为 0 漏洞。另将 TypeScript 从 7.0.2 调整为 6.0.3，解决 vue-tsc 访问编译器 API 时的构建错误。
 
 当前不需要安装数据库。`local` 环境通过 `application-local.yml` 排除数据源自动配置，因此即便启用可选 `persistence` 依赖也不会尝试创建数据源。后续接入本地数据库时需删除该排除项并提供连接配置。
+
+首页可选择公历或农历日期和时间进行基础排盘，农历可选闰月，结果同时展示对应公历和农历。计算约定及接口示例见 [API 文档](api/README.md)。
+
+PC/手机选择器已分别接入 Element Plus/Vant，选择器适配测试运行 `cd frontend && npm test`，交互与选型见 [选择器说明](date-time-picker.md)。

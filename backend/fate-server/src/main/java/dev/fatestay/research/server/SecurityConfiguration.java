@@ -1,5 +1,6 @@
 package dev.fatestay.research.server;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,7 +10,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(requests -> requests
+        return http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/bazi/charts"))
+                .authorizeHttpRequests(requests -> requests
+                .requestMatchers(HttpMethod.POST, "/api/v1/bazi/charts").permitAll()
                 .requestMatchers("/api/v1/health", "/actuator/health").permitAll()
                 .anyRequest().denyAll())
                 .build();

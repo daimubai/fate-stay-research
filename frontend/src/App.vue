@@ -165,7 +165,7 @@ onMounted(checkConnection)
         </div>
         <p class="result-input">输入历法：{{ chart.inputCalendar === 'SOLAR' ? '公历' : '农历' }} · {{ chart.timeZone }} · 日期按零点换日，四柱按 23 点换日</p>
         <BaziResult :chart="chart" />
-        <FortuneResult v-if="chart.fortune && chart.gender" :key="`${chart.birthDateTime}-${chart.gender}`" :fortune="chart.fortune" :gender="chart.gender" />
+        <FortuneResult v-if="chart.fortune && chart.gender" :key="`${chart.birthDateTime}-${chart.gender}`" :fortune="chart.fortune" :gender="chart.gender" :birth-date-time="chart.birthDateTime" />
         <p v-else class="legacy-fortune-note">此为旧排盘快照，尚未设置性别。<a href="#chart-title">补充性别并重新排盘</a>后可查看起运、大运与流年。</p>
         <p class="engine">引擎 {{ chart.engineVersion }} · 规则 {{ chart.ruleVersion }}</p>
       </section>

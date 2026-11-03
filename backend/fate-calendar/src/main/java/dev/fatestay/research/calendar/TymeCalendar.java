@@ -4,6 +4,10 @@ import com.tyme.eightchar.EightChar;
 import com.tyme.eightchar.ChildLimit;
 import com.tyme.enums.Gender;
 import com.tyme.sixtycycle.SixtyCycle;
+import com.tyme.sixtycycle.SixtyCycleMonth;
+import com.tyme.sixtycycle.SixtyCycleYear;
+import com.tyme.solar.SolarTerm;
+import java.time.Duration;
 import com.tyme.sixtycycle.HeavenStem;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +109,53 @@ public final class TymeCalendar {
                          Stem stem, Branch branch, String naYin, List<AnnualYear> annualYears) {}
     public record FortuneTimeline(String ruleVersion, String direction, LocalDateTime startTime,
                                   StartInterval startInterval, String ageConvention, List<Decade> decades) {}
+
+    public FlowMonths flowMonths(int year, String dayStem) {
+        var master = HeavenStem.fromName(dayStem);
+        List<FlowMonth> months = new ArrayList<>();
+        for (int i = 0; i < 12; i++) months.add(flowMonth(year, i + 1, master));
+        return new FlowMonths(year, SixtyCycleYear.fromYear(year).getSixtyCycle().getName(),
+                "jie-month-zi23-day-v1", new DayMaster(master.getName(), master.getElement().getName()), List.copyOf(months));
+    }
+
+    private FlowMonth flowMonth(int year, int index, HeavenStem master) {
+        var month = SixtyCycleMonth.fromIndex(year, index - 1).getSixtyCycle();
+        var term = SolarTerm.fromIndex(year, 3 + (index - 1) * 2);
+        return new FlowMonth(index, month.getEarthBranch().getName() + "月", term.getName(),
+                localTime(term.getJulianDay().getSolarTime()), localTime(term.next(2).getJulianDay().getSolarTime()),
+                month.getName(), stem(month, master), branch(month), month.getSound().getName());
+    }
+
+    public FlowDays flowDays(int year, int monthIndex, String dayStem) {
+        var master = HeavenStem.fromName(dayStem);
+        var month = flowMonth(year, monthIndex, master);
+        List<FlowDay> days = new ArrayList<>();
+        var cursor = month.startTime();
+        while (cursor.isBefore(month.endTime())) {
+            var boundary = cursor.toLocalDate().atTime(23, 0);
+            if (!cursor.isBefore(boundary)) boundary = boundary.plusDays(1);
+            var end = boundary.isBefore(month.endTime()) ? boundary : month.endTime();
+            var cycle = SolarTime.fromYmdHms(cursor.getYear(), cursor.getMonthValue(), cursor.getDayOfMonth(),
+                    cursor.getHour(), cursor.getMinute(), cursor.getSecond()).getSixtyCycleHour().getDay();
+            // Label by the civil date mainly covered by the 23:00-to-23:00 Gan-Zhi day.
+            var date = cursor.getHour() >= 23 ? cursor.toLocalDate().plusDays(1) : cursor.toLocalDate();
+            days.add(new FlowDay(date, toLunar(date), cursor, end, Duration.between(cursor, end).getSeconds() != 86400,
+                    cycle.getName(), stem(cycle, master), branch(cycle), cycle.getSound().getName()));
+            cursor = end;
+        }
+        return new FlowDays(year, monthIndex, "jie-month-zi23-day-v1",
+                new DayMaster(master.getName(), master.getElement().getName()), month, List.copyOf(days));
+    }
+
+    private LocalDateTime localTime(SolarTime time) {
+        return LocalDateTime.of(time.getYear(), time.getMonth(), time.getDay(), time.getHour(), time.getMinute(), time.getSecond());
+    }
+    public record FlowMonth(int index, String name, String term, LocalDateTime startTime, LocalDateTime endTime,
+                            String ganZhi, Stem stem, Branch branch, String naYin) {}
+    public record FlowDay(LocalDate date, LunarDate lunarDate, LocalDateTime startTime, LocalDateTime endTime,
+                          boolean partial, String ganZhi, Stem stem, Branch branch, String naYin) {}
+    public record FlowMonths(int year, String yearGanZhi, String ruleVersion, DayMaster dayMaster, List<FlowMonth> months) {}
+    public record FlowDays(int year, int monthIndex, String ruleVersion, DayMaster dayMaster, FlowMonth month, List<FlowDay> days) {}
 
     public LocalDate toSolar(int year, int month, int day, boolean leapMonth) {
         if (year < 1899 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 30) {

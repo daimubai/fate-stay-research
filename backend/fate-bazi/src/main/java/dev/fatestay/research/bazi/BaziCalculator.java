@@ -56,6 +56,23 @@ public final class BaziCalculator {
                 Collections.unmodifiableMap(counts), gender, gender == null ? null : calendar.fortune(birthTime, gender == BirthGender.MALE));
     }
 
+    public TymeCalendar.FlowMonths flowMonths(LocalDateTime birthTime, int year) {
+        validateFlowYear(year);
+        var chart = calculate(birthTime);
+        return calendar.flowMonths(year, chart.dayMaster().name());
+    }
+
+    public TymeCalendar.FlowDays flowDays(LocalDateTime birthTime, int year, int monthIndex) {
+        validateFlowYear(year);
+        if (monthIndex < 1 || monthIndex > 12) throw new IllegalArgumentException("流月序号须为 1–12，寅月为 1");
+        var chart = calculate(birthTime);
+        return calendar.flowDays(year, monthIndex, chart.dayMaster().name());
+    }
+
+    private void validateFlowYear(int year) {
+        if (year < 1900 || year > 2210) throw new IllegalArgumentException("流年须在 1900–2210 年之间");
+    }
+
     public record Chart(LocalDateTime birthDateTime, String timeZone, String precision,
                         String engineVersion, String ruleVersion, TymeCalendar.Pillars pillars, String inputCalendar, LocalDate solarDate,
                         TymeCalendar.LunarDate lunarDate, TymeCalendar.DayMaster dayMaster,

@@ -40,3 +40,5 @@ Profiles `local`, `test`, `prod` are planned; only the default profile name is c
 Guest chart snapshots are stored only in browser localStorage through `LocalStoragePort`. Record identity uses the fixed-offset solar minute, deduplicating equivalent solar/lunar input. No backend persistence/authentication boundary is introduced. See [local library](../local-chart-library.md).
 
 `TymeCalendar.fortune` adapts the default ChildLimit provider into immutable start-time/interval, decade and annual-year records. Annual Gan-Zhi uses SixtyCycleYear rather than the minor-fortune Fortune class. Public HTTP requests require explicit gender; legacy core overloads remain four-pillars-only for compatibility.
+
+Flow-month/day endpoints derive the day-stem reference from the validated solar birth datetime. Months use SixtyCycleMonth with exact Jie intervals; day intervals split at 23:00 and clip at the month edges. The client loads details on demand, aborts obsolete requests and bounds page-memory caches; no new database or persistent snapshot fields are introduced.

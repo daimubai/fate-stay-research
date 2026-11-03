@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
+import FlowCalendar from './FlowCalendar.vue'
 import type { BirthGender, FortuneTimeline } from '../api/bazi'
 
-const props = defineProps<{ fortune: FortuneTimeline; gender: BirthGender }>()
+const props = defineProps<{ fortune: FortuneTimeline; gender: BirthGender; birthDateTime: string }>()
 const currentYear = new Date(Date.now() + 8 * 3600_000).getUTCFullYear()
 const selectedIndex = ref(0)
 const selectedYear = ref(0)
+const flowPanel = ref<HTMLElement>()
+function selectAnnual(year: number) { selectedYear.value = year; nextTick(() => flowPanel.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })) }
 const decade = computed(() => props.fortune.decades[selectedIndex.value]!)
 const annual = computed(() => decade.value.annualYears.find(year => year.year === selectedYear.value) ?? decade.value.annualYears[0]!)
 const interval = computed(() => {
@@ -24,8 +27,9 @@ watch(() => props.fortune, value => { const current = value.decades.findIndex(d 
     <div class="decade-strip" role="group" aria-label="选择大运"><button v-for="(item, index) in fortune.decades" :key="item.index" type="button" :aria-pressed="selectedIndex === index" :aria-label="`第${item.index}步大运 ${item.ganZhi} ${item.startYear}至${item.endYear}年`" @click="selectDecade(index)"><span>第 {{ item.index }} 步</span><strong>{{ item.ganZhi }}</strong><small>{{ item.startAge }}—{{ item.endAge }} 岁</small><small>{{ item.startYear }}—{{ item.endYear }}</small><em v-if="item.startYear <= currentYear && item.endYear >= currentYear">含今年</em></button></div>
     <div class="decade-focus" role="status"><h4>第 {{ decade.index }} 步 · {{ decade.ganZhi }}大运</h4><p>{{ decade.startYear }}—{{ decade.endYear }} 年 · {{ decade.startAge }}—{{ decade.endAge }} 岁（年序虚岁）</p><div><span>天干十神 <b>{{ decade.stem.tenGod }}</b></span><span>五行 <b>{{ decade.stem.element }}{{ decade.branch.element }}</b></span><span>纳音 <b>{{ decade.naYin }}</b></span></div></div>
     <div class="annual-heading"><h4>对应流年</h4><span>点选年份查看详情</span></div>
-    <div class="annual-years" role="group" aria-label="选择流年"><button v-for="year in decade.annualYears" :key="year.year" type="button" :aria-pressed="annual.year === year.year" :aria-label="`${year.year}年 ${year.ganZhi}流年`" @click="selectedYear = year.year"><span>{{ year.year }}<small v-if="year.year === currentYear">今年</small></span><strong>{{ year.ganZhi }}</strong><small>{{ year.age }} 岁 · {{ year.stem.tenGod }}</small></button></div>
+    <div class="annual-years" role="group" aria-label="选择流年"><button v-for="year in decade.annualYears" :key="year.year" type="button" :aria-pressed="annual.year === year.year" :aria-label="`${year.year}年 ${year.ganZhi}流年`" @click="selectAnnual(year.year)"><span>{{ year.year }}<small v-if="year.year === currentYear">今年</small></span><strong>{{ year.ganZhi }}</strong><small>{{ year.age }} 岁 · {{ year.stem.tenGod }}</small></button></div>
     <div class="annual-detail" aria-live="polite" aria-label="流年详情"><strong>{{ annual.year }} 年 · {{ annual.ganZhi }}</strong><span>{{ annual.age }} 岁（年序虚岁）</span><dl><div><dt>天干十神</dt><dd>{{ annual.stem.tenGod }}</dd></div><div><dt>干支五行</dt><dd>{{ annual.stem.name }}{{ annual.stem.element }} · {{ annual.branch.name }}{{ annual.branch.element }}</dd></div><div><dt>纳音</dt><dd>{{ annual.naYin }}</dd></div></dl></div>
+    <div ref="flowPanel"><FlowCalendar :year="annual.year" :birth-date-time="birthDateTime" /></div>
     <p class="fortune-boundary">展示起运后的前 10 步大运，每步 10 个流年。流年按干支年（立春起）标注；列表为年份分组，起运、交运当年须结合具体交运时刻区分，不代表整年都属同一步大运。起运前童限及小运暂未展开。</p>
   </section>
 </template>

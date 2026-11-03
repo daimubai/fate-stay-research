@@ -1,6 +1,7 @@
 package dev.fatestay.research.chart;
 
 import dev.fatestay.research.bazi.BaziCalculator;
+import dev.fatestay.research.calendar.TymeCalendar;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -38,6 +39,20 @@ public class BaziController {
         }
         return calculator.calculate(input.birthDate().atTime(input.birthTime()), gender);
     }
+
+    @PostMapping("/flow-months")
+    public TymeCalendar.FlowMonths flowMonths(@Valid @RequestBody FlowMonthRequest input) {
+        return calculator.flowMonths(input.birthDate().atTime(input.birthTime()), input.year());
+    }
+
+    @PostMapping("/flow-days")
+    public TymeCalendar.FlowDays flowDays(@Valid @RequestBody FlowDayRequest input) {
+        return calculator.flowDays(input.birthDate().atTime(input.birthTime()), input.year(), input.monthIndex());
+    }
+
+    public record FlowMonthRequest(@NotNull LocalDate birthDate, @NotNull LocalTime birthTime, @NotNull Integer year) {}
+    public record FlowDayRequest(@NotNull LocalDate birthDate, @NotNull LocalTime birthTime, @NotNull Integer year,
+                                 @NotNull Integer monthIndex) {}
 
     public enum CalendarType { SOLAR, LUNAR }
     public record LunarInput(Integer year, Integer month, Integer day, Boolean leapMonth) {}

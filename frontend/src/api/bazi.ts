@@ -43,3 +43,21 @@ export async function calculateBazi(input: BirthInput): Promise<BaziChart> {
   const { data } = await axios.post<BaziChart>('/api/v1/bazi/charts', input, { timeout: 10000 })
   return data
 }
+
+export interface FlowMonth {
+  index: number; name: string; term: string; startTime: string; endTime: string
+  ganZhi: string; stem: StemDetail; branch: { name: string; element: ElementName }; naYin: string
+}
+export interface FlowDay {
+  date: string; lunarDate: BaziChart['lunarDate']; startTime: string; endTime: string; partial: boolean
+  ganZhi: string; stem: StemDetail; branch: { name: string; element: ElementName }; naYin: string
+}
+export interface FlowMonths { year: number; yearGanZhi: string; ruleVersion: string; dayMaster: BaziChart['dayMaster']; months: FlowMonth[] }
+export interface FlowDays { year: number; monthIndex: number; ruleVersion: string; dayMaster: BaziChart['dayMaster']; month: FlowMonth; days: FlowDay[] }
+export interface FlowInput { birthDate: string; birthTime: string; year: number }
+export async function getFlowMonths(input: FlowInput, signal?: AbortSignal): Promise<FlowMonths> {
+  return (await axios.post<FlowMonths>('/api/v1/bazi/flow-months', input, { timeout: 10000, signal })).data
+}
+export async function getFlowDays(input: FlowInput & { monthIndex: number }, signal?: AbortSignal): Promise<FlowDays> {
+  return (await axios.post<FlowDays>('/api/v1/bazi/flow-days', input, { timeout: 10000, signal })).data
+}

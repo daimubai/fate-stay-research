@@ -44,3 +44,5 @@ Guest chart snapshots are stored only in browser localStorage through `LocalStor
 Flow-month/day endpoints derive the day-stem reference from the validated solar birth datetime. Months use SixtyCycleMonth with exact Jie intervals; day intervals split at 23:00 and clip at the month edges. The client loads details on demand, aborts obsolete requests and bounds page-memory caches; no new database or persistent snapshot fields are introduced.
 
 Flow-hour calculation validates the selected date against its Jie-based flow month, obtains twelve hours from SixtyCycleDay, and intersects each two-hour interval with the already-clipped flow day. Nominal intervals remain available for all twelve reference hours; absent intersections return null actual bounds. Ten-god reference stays the validated birth day stem. The client shares a bounded hour cache across month navigation inside one chart context and aborts stale day requests.
+
+十二长生新增 `pillarDetails[].terrain/selfTerrain`；神煞新增 `shenSha` 规则目录与命中依据。规则版本、接口字段和旧缓存兼容见 [十二长生与神煞](../natal-traits.md)。

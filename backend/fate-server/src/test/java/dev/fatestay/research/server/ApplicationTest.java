@@ -21,6 +21,23 @@ class ApplicationTest {
     MockMvc mvc;
 
     @Test
+    void natalTraitsAreSerializedWithRuleProvenance() throws Exception {
+        mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"calendarType":"SOLAR","birthDate":"1986-05-29","birthTime":"13:37","gender":"MALE"}
+                """))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.pillarDetails[0].terrain").value("沐浴"))
+            .andExpect(jsonPath("$.pillarDetails[0].selfTerrain").value("长生"))
+            .andExpect(jsonPath("$.shenSha.provider").value("PROJECT_RULES_ON_TYME4J"))
+            .andExpect(jsonPath("$.shenSha.ruleVersion").value("common-seven-day-year-v1"))
+            .andExpect(jsonPath("$.shenSha.rules.length()").value(7))
+            .andExpect(jsonPath("$.shenSha.hits.length()").value(2))
+            .andExpect(jsonPath("$.shenSha.hits[0].pillarKey").value("month"))
+            .andExpect(jsonPath("$.shenSha.hits[0].bases[0].reference").value("日干"));
+    }
+
+    @Test
     void healthIsPublicAndReturnsApplicationIdentity() throws Exception {
         mvc.perform(get("/api/v1/health"))
                 .andExpect(status().isOk())

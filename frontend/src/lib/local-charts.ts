@@ -48,6 +48,28 @@ function validChart(value: unknown, birth: BirthSelection): value is BaziChart {
       lastQi = qi
     }
   }
+  const terrains = ['长生', '沐浴', '冠带', '临官', '帝旺', '衰', '病', '死', '墓', '绝', '胎', '养']
+  const hasTraits = value.shenSha !== undefined || value.pillarDetails.some((p: any) => p.terrain !== undefined || p.selfTerrain !== undefined)
+  if (hasTraits) {
+    if (!value.pillarDetails.every((p: any) => terrains.includes(p.terrain) && terrains.includes(p.selfTerrain))) return false
+    const shen = value.shenSha
+    const ids = ['TIAN_YI', 'LU_SHEN', 'YI_MA', 'TAO_HUA', 'HUA_GAI', 'JIANG_XING', 'XUN_KONG']
+    const branch = (v: unknown) => typeof v === 'string' && v.length === 1 && '子丑寅卯辰巳午未申酉戌亥'.includes(v)
+    if (!isObject(shen) || shen.provider !== 'PROJECT_RULES_ON_TYME4J' || shen.ruleVersion !== 'common-seven-day-year-v1'
+      || !Array.isArray(shen.rules) || shen.rules.length !== 7 || !shen.rules.every((r: any, i: number) => isObject(r) && r.id === ids[i] && text(r.name, 8) && text(r.reference, 12))
+      || !Array.isArray(shen.hits) || shen.hits.length > 28) return false
+    const seen = new Set<string>()
+    for (const h of shen.hits) {
+      if (!isObject(h) || !ids.includes(h.id) || !keys.includes(h.pillarKey) || !text(h.pillarLabel, 8)
+        || h.name !== shen.rules.find((r: any) => r.id === h.id)?.name
+        || h.targetBranch !== value.pillarDetails.find((p: any) => p.key === h.pillarKey)?.branch.name
+        || !Array.isArray(h.bases) || h.bases.length < 1 || h.bases.length > 2 || seen.has(`${h.id}:${h.pillarKey}`)) return false
+      seen.add(`${h.id}:${h.pillarKey}`)
+      if (!h.bases.every((b: any) => isObject(b) && ['日干', '日支', '年支', '日柱'].includes(b.reference) && text(b.sourceValue, 2)
+        && Array.isArray(b.targetValues) && b.targetValues.length > 0 && b.targetValues.length <= 2
+        && b.targetValues.every(branch) && b.targetValues.includes(h.targetBranch))) return false
+    }
+  }
   if (value.dayMaster.name !== value.pillarDetails[2].stem.name || value.dayMaster.element !== value.pillarDetails[2].stem.element) return false
   if (!isObject(value.elementCounts)) return false
   const expected = Object.fromEntries(elements.map(name => [name, 0]))

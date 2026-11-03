@@ -185,3 +185,21 @@ test('cached fortune rejects wrong gender, incomplete decades or broken annual c
     assert.throws(() => saveChart(emptyLibrary(), genderInput('MALE'), chart), /不完整/)
   }
 })
+
+test('new traits round trip, upgrade the same slot, and reject damaged evidence', () => {
+  const traits = JSON.parse(readFileSync(new URL('./fixtures/bazi-traits.json', import.meta.url), 'utf8'))
+  const old = add(emptyLibrary())
+  const { birth, chart } = data()
+  Object.assign(chart, traits)
+  const upgraded = saveChart(old, birth, chart, undefined, now)
+  assert.equal(upgraded.records.length, 1)
+  assert.equal(upgraded.activeId, old.activeId)
+  const storage = memoryStorage()
+  writeLibrary(storage, upgraded)
+  assert.deepEqual(readLibrary(storage).library.records[0].chart.shenSha, traits.shenSha)
+  for (const mutate of [c => c.pillarDetails[0].terrain = '无效', c => c.shenSha.hits[0].bases = [], c => c.shenSha.hits[0].targetBranch = '子', c => delete c.shenSha]) {
+    const invalid = structuredClone(chart)
+    mutate(invalid)
+    assert.throws(() => saveChart(emptyLibrary(), birth, invalid, undefined, now))
+  }
+})

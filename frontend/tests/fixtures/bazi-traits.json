@@ -1,0 +1,216 @@
+{
+  "pillarDetails": [
+    {
+      "key": "year",
+      "label": "年柱",
+      "ganZhi": "丙寅",
+      "stem": {
+        "name": "丙",
+        "element": "火",
+        "tenGod": "正财"
+      },
+      "branch": {
+        "name": "寅",
+        "element": "木"
+      },
+      "hiddenStems": [
+        {
+          "name": "甲",
+          "element": "木",
+          "tenGod": "伤官",
+          "qi": "本气"
+        },
+        {
+          "name": "丙",
+          "element": "火",
+          "tenGod": "正财",
+          "qi": "中气"
+        },
+        {
+          "name": "戊",
+          "element": "土",
+          "tenGod": "正官",
+          "qi": "余气"
+        }
+      ],
+      "naYin": "炉中火",
+      "terrain": "沐浴",
+      "selfTerrain": "长生"
+    },
+    {
+      "key": "month",
+      "label": "月柱",
+      "ganZhi": "癸巳",
+      "stem": {
+        "name": "癸",
+        "element": "水",
+        "tenGod": "比肩"
+      },
+      "branch": {
+        "name": "巳",
+        "element": "火"
+      },
+      "hiddenStems": [
+        {
+          "name": "丙",
+          "element": "火",
+          "tenGod": "正财",
+          "qi": "本气"
+        },
+        {
+          "name": "庚",
+          "element": "金",
+          "tenGod": "正印",
+          "qi": "中气"
+        },
+        {
+          "name": "戊",
+          "element": "土",
+          "tenGod": "正官",
+          "qi": "余气"
+        }
+      ],
+      "naYin": "长流水",
+      "terrain": "胎",
+      "selfTerrain": "胎"
+    },
+    {
+      "key": "day",
+      "label": "日柱",
+      "ganZhi": "癸酉",
+      "stem": {
+        "name": "癸",
+        "element": "水",
+        "tenGod": "比肩"
+      },
+      "branch": {
+        "name": "酉",
+        "element": "金"
+      },
+      "hiddenStems": [
+        {
+          "name": "辛",
+          "element": "金",
+          "tenGod": "偏印",
+          "qi": "本气"
+        }
+      ],
+      "naYin": "剑锋金",
+      "terrain": "病",
+      "selfTerrain": "病"
+    },
+    {
+      "key": "hour",
+      "label": "时柱",
+      "ganZhi": "己未",
+      "stem": {
+        "name": "己",
+        "element": "土",
+        "tenGod": "七杀"
+      },
+      "branch": {
+        "name": "未",
+        "element": "土"
+      },
+      "hiddenStems": [
+        {
+          "name": "己",
+          "element": "土",
+          "tenGod": "七杀",
+          "qi": "本气"
+        },
+        {
+          "name": "丁",
+          "element": "火",
+          "tenGod": "偏财",
+          "qi": "中气"
+        },
+        {
+          "name": "乙",
+          "element": "木",
+          "tenGod": "食神",
+          "qi": "余气"
+        }
+      ],
+      "naYin": "天上火",
+      "terrain": "墓",
+      "selfTerrain": "冠带"
+    }
+  ],
+  "shenSha": {
+    "provider": "PROJECT_RULES_ON_TYME4J",
+    "ruleVersion": "common-seven-day-year-v1",
+    "rules": [
+      {
+        "id": "TIAN_YI",
+        "name": "天乙贵人",
+        "reference": "日干"
+      },
+      {
+        "id": "LU_SHEN",
+        "name": "禄神",
+        "reference": "日干"
+      },
+      {
+        "id": "YI_MA",
+        "name": "驿马",
+        "reference": "年支、日支"
+      },
+      {
+        "id": "TAO_HUA",
+        "name": "桃花",
+        "reference": "年支、日支"
+      },
+      {
+        "id": "HUA_GAI",
+        "name": "华盖",
+        "reference": "年支、日支"
+      },
+      {
+        "id": "JIANG_XING",
+        "name": "将星",
+        "reference": "年支、日支"
+      },
+      {
+        "id": "XUN_KONG",
+        "name": "旬空",
+        "reference": "日柱"
+      }
+    ],
+    "hits": [
+      {
+        "id": "TIAN_YI",
+        "name": "天乙贵人",
+        "pillarKey": "month",
+        "pillarLabel": "月柱",
+        "targetBranch": "巳",
+        "bases": [
+          {
+            "reference": "日干",
+            "sourceValue": "癸",
+            "targetValues": [
+              "卯",
+              "巳"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "JIANG_XING",
+        "name": "将星",
+        "pillarKey": "day",
+        "pillarLabel": "日柱",
+        "targetBranch": "酉",
+        "bases": [
+          {
+            "reference": "日支",
+            "sourceValue": "酉",
+            "targetValues": [
+              "酉"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

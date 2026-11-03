@@ -139,3 +139,5 @@ Successful charts automatically save the birth input and full result in this bro
 ## License
 
 This project is licensed under the [Apache License 2.0](LICENSE). Third-party dependencies remain subject to their respective licenses.
+
+Natal results now include Tyme4j twelve life stages (day-master and self-seat references) and seven explicitly versioned project-level Shen Sha rules with matching evidence. See [calculation conventions](docs/natal-traits.md). Legacy browser snapshots remain readable and can be upgraded by recalculating.

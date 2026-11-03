@@ -10,6 +10,7 @@ import com.tyme.sixtycycle.SixtyCycleDay;
 import com.tyme.solar.SolarTerm;
 import java.time.Duration;
 import com.tyme.sixtycycle.HeavenStem;
+import com.tyme.sixtycycle.EarthBranch;
 import java.util.ArrayList;
 import java.util.List;
 import com.tyme.solar.SolarTime;
@@ -36,7 +37,10 @@ public final class TymeCalendar {
                 List.of(describe("year", "年柱", chart.getYear(), dayMaster),
                         describe("month", "月柱", chart.getMonth(), dayMaster),
                         describe("day", "日柱", chart.getDay(), dayMaster),
-                        describe("hour", "时柱", chart.getHour(), dayMaster)));
+                        describe("hour", "时柱", chart.getHour(), dayMaster)),
+                java.util.stream.IntStream.range(0, 12).mapToObj(EarthBranch::fromIndex)
+                    .filter(b -> "临官".equals(dayMaster.getTerrain(b).getName())).findFirst().orElseThrow().getName(),
+                java.util.Arrays.stream(chart.getDay().getExtraEarthBranches()).map(EarthBranch::getName).toList());
     }
 
     private PillarDetail describe(String key, String label, SixtyCycle pillar, HeavenStem dayMaster) {
@@ -49,7 +53,8 @@ public final class TymeCalendar {
         return new PillarDetail(key, label, pillar.getName(),
                 new Stem(stem.getName(), stem.getElement().getName(), dayMaster.getTenStar(stem).getName()),
                 new Branch(branch.getName(), branch.getElement().getName()),
-                List.copyOf(hidden), pillar.getSound().getName());
+                List.copyOf(hidden), pillar.getSound().getName(),
+                dayMaster.getTerrain(branch).getName(), stem.getTerrain(branch).getName());
     }
 
     private void addHidden(List<HiddenStem> target, HeavenStem stem, String qi, HeavenStem dayMaster) {
@@ -64,8 +69,8 @@ public final class TymeCalendar {
     public record Branch(String name, String element) {}
     public record HiddenStem(String name, String element, String tenGod, String qi) {}
     public record PillarDetail(String key, String label, String ganZhi, Stem stem, Branch branch,
-                               List<HiddenStem> hiddenStems, String naYin) {}
-    public record Analysis(Pillars pillars, DayMaster dayMaster, List<PillarDetail> pillarDetails) {}
+                               List<HiddenStem> hiddenStems, String naYin, String terrain, String selfTerrain) {}
+    public record Analysis(Pillars pillars, DayMaster dayMaster, List<PillarDetail> pillarDetails, String dayLuBranch, List<String> dayVoidBranches) {}
 
     public FortuneTimeline fortune(LocalDateTime time, boolean male) {
         var solar = SolarTime.fromYmdHms(time.getYear(), time.getMonthValue(), time.getDayOfMonth(),

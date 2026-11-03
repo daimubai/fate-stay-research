@@ -53,7 +53,7 @@ public final class BaziCalculator {
         return new Chart(birthTime, "UTC+08:00", "MINUTE", "tyme4j-1.5.2",
                 "lichun-jie-zi23-v1", analysis.pillars(), inputCalendar, birthTime.toLocalDate(),
                 calendar.toLunar(birthTime.toLocalDate()), analysis.dayMaster(), analysis.pillarDetails(),
-                Collections.unmodifiableMap(counts), gender, gender == null ? null : calendar.fortune(birthTime, gender == BirthGender.MALE));
+                Collections.unmodifiableMap(counts), ShenShaCalculator.calculate(analysis), gender, gender == null ? null : calendar.fortune(birthTime, gender == BirthGender.MALE));
     }
 
     public TymeCalendar.FlowMonths flowMonths(LocalDateTime birthTime, int year) {
@@ -85,5 +85,5 @@ public final class BaziCalculator {
                         String engineVersion, String ruleVersion, TymeCalendar.Pillars pillars, String inputCalendar, LocalDate solarDate,
                         TymeCalendar.LunarDate lunarDate, TymeCalendar.DayMaster dayMaster,
                         List<TymeCalendar.PillarDetail> pillarDetails, Map<String, Integer> elementCounts,
-                        BirthGender gender, TymeCalendar.FortuneTimeline fortune) {}
+                        ShenShaCalculator.Result shenSha, BirthGender gender, TymeCalendar.FortuneTimeline fortune) {}
 }

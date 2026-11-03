@@ -16,9 +16,18 @@ export interface PillarDetail {
   branch: { name: string; element: ElementName }
   hiddenStems: HiddenStem[]
   naYin: string
+  terrain?: string
+  selfTerrain?: string
+}
+
+export interface ShenShaResult {
+  provider: string; ruleVersion: string
+  rules: { id: string; name: string; reference: string }[]
+  hits: { id: string; name: string; pillarKey: string; pillarLabel: string; targetBranch: string; bases: { reference: string; sourceValue: string; targetValues: string[] }[] }[]
 }
 
 export interface BaziChart {
+  shenSha?: ShenShaResult
   gender?: BirthGender | null
   fortune?: FortuneTimeline | null
   dayMaster: { name: string; element: ElementName }

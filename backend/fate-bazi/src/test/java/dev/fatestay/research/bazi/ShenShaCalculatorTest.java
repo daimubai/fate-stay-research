@@ -38,7 +38,7 @@ class ShenShaCalculatorTest {
         var a = new TymeCalendar().analyze(LocalDateTime.of(1990,3,15,10,30)); // 年午、日卯
         // Synthetic year 未 and day 卯 share the 亥卯未 trine; month 巳 and hour 子 exercise other matches.
         var details = List.of(p("year","未"),p("month","巳"),p("day","卯"),p("hour","子"));
-        var synthetic = new TymeCalendar.Analysis(a.pillars(), a.dayMaster(),details,a.dayLuBranch(),List.of("巳","午"));
+        var synthetic = new TymeCalendar.Analysis(a.pillars(), a.dayMaster(),details,a.dayLuBranch(),List.of("巳","午"),a.auxiliaryPalaces());
         var result = ShenShaCalculator.calculate(synthetic);
         var self = result.hits().stream().filter(h -> h.id().equals("JIANG_XING") && h.pillarKey().equals("day")).findFirst().orElseThrow();
         // Year 未 and day 卯 belong to the same trine: one tag with both references.
@@ -66,10 +66,10 @@ class ShenShaCalculatorTest {
     @Test void emptyMatchesAndNativeLuAreHandledWithoutInventedTags() {
         var a = new TymeCalendar().analyze(LocalDateTime.of(1986,5,29,13,37));
         var onlyYin = List.of(p("year","寅"),p("month","寅"),p("day","寅"),p("hour","寅"));
-        var empty = ShenShaCalculator.calculate(new TymeCalendar.Analysis(a.pillars(),a.dayMaster(),onlyYin,a.dayLuBranch(),a.dayVoidBranches()));
+        var empty = ShenShaCalculator.calculate(new TymeCalendar.Analysis(a.pillars(),a.dayMaster(),onlyYin,a.dayLuBranch(),a.dayVoidBranches(),a.auxiliaryPalaces()));
         assertTrue(empty.hits().isEmpty());
         var onlyZi = List.of(p("year","子"),p("month","子"),p("day","子"),p("hour","子"));
-        var lu = ShenShaCalculator.calculate(new TymeCalendar.Analysis(a.pillars(),a.dayMaster(),onlyZi,a.dayLuBranch(),a.dayVoidBranches()));
+        var lu = ShenShaCalculator.calculate(new TymeCalendar.Analysis(a.pillars(),a.dayMaster(),onlyZi,a.dayLuBranch(),a.dayVoidBranches(),a.auxiliaryPalaces()));
         assertEquals(4,lu.hits().stream().filter(h -> h.id().equals("LU_SHEN")).count());
     }
     @Test void terrainCoversTenStemsTwelveBranchesAndBothDirections() {

@@ -1,0 +1,42 @@
+{
+  "ruleVersion": "tyme-eight-char-palaces-v1",
+  "fetalOrigin": {
+    "ganZhi": "甲申",
+    "stem": {
+      "name": "甲",
+      "element": "木",
+      "tenGod": "伤官"
+    },
+    "branch": {
+      "name": "申",
+      "element": "金"
+    },
+    "naYin": "泉中水"
+  },
+  "ownSign": {
+    "ganZhi": "癸巳",
+    "stem": {
+      "name": "癸",
+      "element": "水",
+      "tenGod": "比肩"
+    },
+    "branch": {
+      "name": "巳",
+      "element": "火"
+    },
+    "naYin": "长流水"
+  },
+  "bodySign": {
+    "ganZhi": "辛丑",
+    "stem": {
+      "name": "辛",
+      "element": "金",
+      "tenGod": "偏印"
+    },
+    "branch": {
+      "name": "丑",
+      "element": "土"
+    },
+    "naYin": "壁上土"
+  }
+}

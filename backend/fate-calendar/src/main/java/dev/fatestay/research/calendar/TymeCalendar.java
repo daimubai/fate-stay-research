@@ -40,7 +40,11 @@ public final class TymeCalendar {
                         describe("hour", "时柱", chart.getHour(), dayMaster)),
                 java.util.stream.IntStream.range(0, 12).mapToObj(EarthBranch::fromIndex)
                     .filter(b -> "临官".equals(dayMaster.getTerrain(b).getName())).findFirst().orElseThrow().getName(),
-                java.util.Arrays.stream(chart.getDay().getExtraEarthBranches()).map(EarthBranch::getName).toList());
+                java.util.Arrays.stream(chart.getDay().getExtraEarthBranches()).map(EarthBranch::getName).toList(),
+                new AuxiliaryPalaces("tyme-eight-char-palaces-v1",
+                    auxiliaryPillar(chart.getFetalOrigin(), dayMaster),
+                    auxiliaryPillar(chart.getOwnSign(), dayMaster),
+                    auxiliaryPillar(chart.getBodySign(), dayMaster)));
     }
 
     private PillarDetail describe(String key, String label, SixtyCycle pillar, HeavenStem dayMaster) {
@@ -57,6 +61,14 @@ public final class TymeCalendar {
                 dayMaster.getTerrain(branch).getName(), stem.getTerrain(branch).getName());
     }
 
+    private AuxiliaryPillar auxiliaryPillar(SixtyCycle cycle, HeavenStem dayMaster) {
+        return new AuxiliaryPillar(cycle.getName(), stem(cycle, dayMaster), branch(cycle), cycle.getSound().getName());
+    }
+
+    public record AuxiliaryPillar(String ganZhi, Stem stem, Branch branch, String naYin) {}
+    public record AuxiliaryPalaces(String ruleVersion, AuxiliaryPillar fetalOrigin,
+                                   AuxiliaryPillar ownSign, AuxiliaryPillar bodySign) {}
+
     private void addHidden(List<HiddenStem> target, HeavenStem stem, String qi, HeavenStem dayMaster) {
         if (stem != null) {
             target.add(new HiddenStem(stem.getName(), stem.getElement().getName(),
@@ -70,7 +82,7 @@ public final class TymeCalendar {
     public record HiddenStem(String name, String element, String tenGod, String qi) {}
     public record PillarDetail(String key, String label, String ganZhi, Stem stem, Branch branch,
                                List<HiddenStem> hiddenStems, String naYin, String terrain, String selfTerrain) {}
-    public record Analysis(Pillars pillars, DayMaster dayMaster, List<PillarDetail> pillarDetails, String dayLuBranch, List<String> dayVoidBranches) {}
+    public record Analysis(Pillars pillars, DayMaster dayMaster, List<PillarDetail> pillarDetails, String dayLuBranch, List<String> dayVoidBranches, AuxiliaryPalaces auxiliaryPalaces) {}
 
     public FortuneTimeline fortune(LocalDateTime time, boolean male) {
         var solar = SolarTime.fromYmdHms(time.getYear(), time.getMonthValue(), time.getDayOfMonth(),

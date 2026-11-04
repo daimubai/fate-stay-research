@@ -21,6 +21,8 @@ const birth = ref<BirthSelection>(restored ? { ...restored.birth } : { solarDate
 const calculating = ref(false)
 const chart = ref<BaziChart | null>(restored?.chart ?? null)
 const chartError = ref('')
+const editorOpen = ref(!restored || window.matchMedia('(min-width: 1024px)').matches)
+function editBirth() { editorOpen.value = true; nextTick(() => document.getElementById('birth-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' })) }
 const pending = ref<{ birth: BirthSelection; chart: BaziChart } | null>(null)
 const currentRecord = computed(() => library.value.records.find(record => record.id === library.value.activeId))
 if (restored) libraryStatus.value = `已从此浏览器恢复「${restored.name}」`
@@ -54,9 +56,11 @@ function selectRecord(id: string, scroll = true) {
   pending.value = null
   persist({ ...library.value, activeId: id })
   libraryStatus.value = `正在查看「${record.name}」，无需重新计算。`
+  if (window.matchMedia('(max-width: 767px)').matches) editorOpen.value = false
   if (scroll) nextTick(() => document.getElementById('chart-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
 }
 function newRecord() {
+  editorOpen.value = true
   birth.value = { solarDate: '', time: '', calendarType: 'SOLAR', gender: '' }
   chart.value = null
   pending.value = null
@@ -105,7 +109,13 @@ async function submitChart() {
   chartError.value = ''
   try {
     const result = await calculateBazi(toBirthInput(birth.value))
-    if (revision === inputRevision) { chart.value = result; saveCurrentChart() }
+    if (revision === inputRevision) {
+      chart.value = result; saveCurrentChart()
+      if (window.matchMedia('(max-width: 1023px)').matches) {
+        editorOpen.value = false
+        nextTick(() => document.getElementById('chart-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+      }
+    }
   } catch (error) {
     if (revision === inputRevision) {
       chartError.value = axios.isAxiosError(error) && error.response?.status === 400
@@ -140,47 +150,39 @@ onMounted(checkConnection)
 </script>
 
 <template>
-  <main>
-    <header><span class="mark">研</span><span>FateStay Research</span><span class="tag">未登录 · 本地模式</span></header>
-    <section class="intro">
-      <p class="eyebrow">命理研究平台</p>
-      <h1>输入出生时间，查看四柱八字。</h1>
-      <p>选择公历或农历出生日期，查看对应日期与年、月、日、时四柱。</p>
-    </section>
-    <LocalChartLibrary :library="library" :notice="storageNotice" :status="libraryStatus" :pending="!!pending" :has-chart="!!chart" @select="selectRecord" @new="newRecord" @remove="removeRecord" @rename="renameRecord" @replace="replaceRecord" @save="saveCurrentChart" @dismiss="dismissSave" />
-    <section class="panel chart-panel" aria-labelledby="chart-title">
-      <div class="panel-heading"><h2 id="chart-title">八字排盘</h2><span class="tag">北京时间 UTC+08:00</span></div>
-      <form @submit.prevent="submitChart">
-        <BirthPicker v-model="birth" />
-        <fieldset class="gender-field"><legend>性别 <span>用于起运与大运顺逆规则</span></legend><div role="group" aria-label="性别"><button type="button" :aria-pressed="birth.gender === 'MALE'" @click="birth = { ...birth, gender: 'MALE' }">男</button><button type="button" :aria-pressed="birth.gender === 'FEMALE'" @click="birth = { ...birth, gender: 'FEMALE' }">女</button></div></fieldset>
-        <div class="birth-submit-row"><p>北京时间 UTC+08:00 · 立春换年、节令换月、23 点换日。<br />不校正夏令时或真太阳时。</p><button type="submit" :disabled="calculating">{{ calculating ? '正在计算四柱…' : '开始排盘' }}<span aria-hidden="true"> →</span></button></div>
-      </form>
-      <p v-if="chartError" role="alert" class="chart-error">{{ chartError }}</p>
-      <section v-if="chart" class="chart-result" id="chart-result" aria-label="四柱结果" aria-live="polite">
-        <div class="saved-result-bar"><span>{{ currentRecord ? `本机记录 · ${currentRecord.name}` : '本次结果尚未保存' }}</span><a href="#local-library-title">{{ pending ? '记录已满，选择替换 →' : '管理本机记录 ↑' }}</a></div>
-        <div v-if="library.records.length > 1" class="saved-result-tabs" role="group" aria-label="切换本机排盘"><button v-for="record in library.records" :key="record.id" type="button" :title="record.name" :aria-pressed="library.activeId === record.id" @click="selectRecord(record.id, false)">{{ record.name }}</button></div>
-        <div class="calendar-results">
-          <p><span>公历</span><strong>{{ chart.solarDate }} {{ chart.birthDateTime.slice(11, 16) }}</strong></p>
-          <p><span>农历</span><strong>{{ chart.lunarDate.display }} {{ chart.birthDateTime.slice(11, 16) }}</strong></p>
-        </div>
-        <p class="result-input">输入历法：{{ chart.inputCalendar === 'SOLAR' ? '公历' : '农历' }} · {{ chart.timeZone }} · 日期按零点换日，四柱按 23 点换日</p>
-        <BaziResult :chart="chart" />
-        <FortuneResult v-if="chart.fortune && chart.gender" :key="`${chart.birthDateTime}-${chart.gender}`" :fortune="chart.fortune" :gender="chart.gender" :birth-date-time="chart.birthDateTime" />
-        <p v-else class="legacy-fortune-note">此为旧排盘快照，尚未设置性别。<a href="#chart-title">补充性别并重新排盘</a>后可查看起运、大运与流年。</p>
-        <p class="engine">引擎 {{ chart.engineVersion }} · 规则 {{ chart.ruleVersion }}</p>
-      </section>
-    </section>
-    <section class="panel" aria-labelledby="connection-title">
-      <div class="panel-heading"><h2 id="connection-title">服务连接</h2><span class="endpoint">GET /api/v1/health</span></div>
-      <div role="status" aria-live="polite" class="connection">
-        <span class="dot" :class="{ online: health, failed: error }"></span>
-        <div>
-          <strong>{{ loading ? '正在连接后端…' : health ? '后端连接正常' : '后端未连接' }}</strong>
-          <p>{{ error || (health ? `${health.application} · ${health.status}` : '等待服务响应') }}</p>
-        </div>
+  <main class="workspace-page">
+    <header class="workspace-header"><span class="mark">研</span><span>FateStay Research</span><span class="tag">未登录 · 本机保存</span></header>
+    <div class="workspace-layout">
+      <aside class="workspace-sidebar">
+        <details id="birth-editor" class="panel editor-disclosure" :open="editorOpen" @toggle="editorOpen = ($event.target as HTMLDetailsElement).open">
+          <summary><h2>出生信息</h2><span>{{ editorOpen ? '收起' : '修改 / 新建' }}</span></summary>
+          <form @submit.prevent="submitChart">
+            <BirthPicker v-model="birth" />
+            <fieldset class="gender-field"><legend>性别</legend><div role="group" aria-label="性别"><button type="button" :aria-pressed="birth.gender === 'MALE'" @click="birth = { ...birth, gender: 'MALE' }">男</button><button type="button" :aria-pressed="birth.gender === 'FEMALE'" @click="birth = { ...birth, gender: 'FEMALE' }">女</button></div></fieldset>
+            <div class="birth-submit-row"><button type="submit" :disabled="calculating">{{ calculating ? '正在排盘…' : '开始排盘' }}</button></div>
+            <details class="birth-policy"><summary>计算口径</summary><p>北京时间 UTC+08:00 · 立春换年、节令换月、23 点换日。不校正夏令时或真太阳时；性别用于起运与大运顺逆。</p></details>
+          </form>
+          <p v-if="chartError" role="alert" class="chart-error">{{ chartError }}</p>
+        </details>
+        <LocalChartLibrary :library="library" :notice="storageNotice" :status="libraryStatus" :pending="!!pending" :has-chart="!!chart" @select="selectRecord" @new="newRecord" @remove="removeRecord" @rename="renameRecord" @replace="replaceRecord" @save="saveCurrentChart" @dismiss="dismissSave" />
+        <details class="connection-disclosure"><summary><span class="dot" :class="{ online: health, failed: error }"></span>{{ loading ? '正在连接…' : health ? '本地服务已连接' : '本地服务未连接' }}</summary><p>{{ error || (health ? `${health.application} · ${health.status}` : '等待服务响应') }}</p><button type="button" :disabled="loading" @click="checkConnection">重新检查</button><small v-if="checkedAt">最近检查 {{ checkedAt }}</small></details>
+      </aside>
+      <div class="workspace-content">
+        <section v-if="chart" class="chart-result" id="chart-result" aria-label="四柱结果">
+          <div class="natal-panel panel">
+            <div class="result-title"><div><h1>四柱命盘</h1><span>{{ currentRecord?.name ?? '本次排盘' }}</span></div><button type="button" class="text-button" @click="editBirth">修改出生信息</button></div>
+            <div v-if="library.records.length > 1" class="saved-result-tabs" role="group" aria-label="切换本机排盘"><button v-for="record in library.records" :key="record.id" type="button" :title="record.name" :aria-pressed="library.activeId === record.id" @click="selectRecord(record.id, false)">{{ record.name }}</button></div>
+            <div class="calendar-results"><span>公历 <b>{{ chart.solarDate }} {{ chart.birthDateTime.slice(11, 16) }}</b></span><span>农历 <b>{{ chart.lunarDate.display }}</b></span><span>{{ chart.gender === 'MALE' ? '男' : chart.gender === 'FEMALE' ? '女' : '性别待补' }}</span></div>
+            <BaziResult :key="`${chart.birthDateTime}-${chart.gender}`" :chart="chart" />
+            <p v-if="pending" class="unsaved-notice">本次结果尚未保存，<a href="#local-library-title">选择替换一个本机记录</a>。</p>
+          </div>
+          <FortuneResult v-if="chart.fortune && chart.gender" :key="`${chart.birthDateTime}-${chart.gender}`" :fortune="chart.fortune" :gender="chart.gender" :birth-date-time="chart.birthDateTime" />
+          <p v-else class="legacy-fortune-note">旧快照尚未设置性别。<button type="button" class="text-button" @click="editBirth">补充性别并重新排盘</button>后可查看起运和运程。</p>
+          <details class="engine-disclosure"><summary>排盘口径与引擎</summary><p>{{ chart.timeZone }} · {{ chart.engineVersion }} · {{ chart.ruleVersion }}。日期按零点换日，四柱按 23 点换日。输入历法：{{ chart.inputCalendar === 'SOLAR' ? '公历' : '农历' }}。</p></details>
+        </section>
+        <section v-else class="panel empty-workspace"><span class="empty-mark" aria-hidden="true">四柱</span><h1>{{ calculating ? '正在生成命盘' : '排一张命盘，开始研究。' }}</h1><p>输入出生日期、时间与性别，或选择已有本机记录。</p><button v-if="!editorOpen" type="button" @click="editBirth">填写出生信息</button><p v-if="chartError" role="alert" class="chart-error">{{ chartError }}</p></section>
       </div>
-      <div class="panel-footer"><span>{{ checkedAt ? `最近检查 ${checkedAt}` : '首次连接检查' }}</span><button :disabled="loading" @click="checkConnection">{{ loading ? '检查中…' : '重新检查' }}</button></div>
-    </section>
-    <p class="note">当前为未登录本地模式；账号登录与云端保存将在后续实现。</p>
+    </div>
+    <footer class="workspace-footer">未登录 · 仅当前浏览器保存 · 最多 3 份</footer>
   </main>
 </template>

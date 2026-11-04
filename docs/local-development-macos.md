@@ -4,16 +4,9 @@
 
 ## 当前项目状态
 
-已补齐 Spring Boot 和 Vue/Vite 入口。前端首页会请求后端健康接口，显示连接状态并支持重新检查；已提供基础八字排盘表单与四柱接口，账户、数据库、大运和流年仍未实现。
+截至 2026-11-04，已提供公农历 / 闰月输入、四柱详解、十二长生与七项神煞、胎元 / 命宫 / 身宫、起运与大运、流年 / 月 / 日 / 时，以及三份未登录本机快照。PC 为左右布局，手机保持四柱横向对照，附加信息默认折叠；时间明细在打开对应选择器时才请求。
 
-| 目录 | 职责与当前内容 |
-| --- | --- |
-| `backend/fate-common` | 公共类型，尚为空模块 |
-| `backend/fate-calendar` | Tyme4j 四柱历法适配 |
-| `backend/fate-bazi` | 独立四柱计算、策略元数据与核心测试 |
-| `backend/fate-server` | Boot 入口、健康/排盘接口、安全配置及集成测试 |
-| `frontend` | Vue 入口、四柱表单与结果、连接检查、Vite 代理及构建脚本 |
-| `docs`、`deploy` | 设计及本地启动文档，尚无生产部署配置 |
+后端为本机 Spring Boot 无状态计算服务，前端为 Vue / Vite。账号、数据库与云端同步尚未实现；不需要安装 MySQL、Redis 或 Docker。能力列表和边界见 [项目 README](../README.md)，模块设计见 [系统架构](architecture/README.md)。
 
 ## 本地启动
 
@@ -35,11 +28,11 @@ npm ci --ignore-scripts
 npm run dev
 ```
 
-打开 http://127.0.0.1:5173，预期显示“后端连接正常”。通过 Ctrl+C 分别停止服务。
+打开 [本地工作台](http://127.0.0.1:5173/)，PC 侧栏的服务状态应显示“本地服务已连接”。手机可直接开始排盘。通过 Ctrl+C 分别停止服务。
 
 后端默认端口 8080，前端固定 5173，端口占用时直接报错。前端通过 Vite 将 `/api` 转发到后端，无需 CORS。修改后端 `SERVER_PORT` 时需同步修改 `frontend/vite.config.ts` 的代理目标。后端 Java 文件修改后需重新打包启动；前端开发服务器支持热更新。
 
-可直接访问 http://127.0.0.1:8080/api/v1/health 或 `/actuator/health`。其他路径默认禁止访问。`npm run build` 进行类型检查和生产构建；`npm run preview` 仅预览静态资源，不提供 API 代理。
+可直接访问 [应用健康接口](http://127.0.0.1:8080/api/v1/health) 或 [Actuator 健康接口](http://127.0.0.1:8080/actuator/health)。四条 `POST /api/v1/bazi/{charts,flow-months,flow-days,flow-hours}` 计算接口也已放行，其他路径默认禁止访问。`npm run build` 进行类型检查和生产构建；`npm run preview` 仅预览静态资源，不提供 API 代理。
 
 ## 已安装环境
 
@@ -75,26 +68,23 @@ source /Volumes/MacData/development/env.sh
 cd frontend
 npm ci --ignore-scripts
 npm run deps:check
+npm test
+npm run build
 ```
 
 `persistence` 仅启用预留的 MyBatis、MySQL 驱动和 Flyway 依赖，不会创建数据库。当前不需要安装 MySQL、Redis 或 Docker。
 
-2026-11-03 已验证默认构建、健康接口和安全边界集成测试、前端类型检查及生产构建。前端 CI 已增加生产构建检查。
+截至 2026-11-04，最近一次功能验证为后端 132 项核心 + 52 项 HTTP / 安全测试、前端 23 项测试和生产构建通过；桌面及 390px / 320px 临时浏览器检查也已完成。前端 CI 执行依赖检查、测试及生产构建，后端执行默认与可选持久化构建。详细证据和未覆盖平台见 [验证记录](verification.md)。
 
-原锁文件的 `follow-redirects` 高危漏洞已通过更新至 1.16.2 修复，`npm audit` 为 0 漏洞。另将 TypeScript 从 7.0.2 调整为 6.0.3，解决 vue-tsc 访问编译器 API 时的构建错误。
+依赖处理历史（2026-11-03）：将 `follow-redirects` 更新至 1.16.2 修复原锁文件漏洞，将 TypeScript 固定为 6.0.3 解决与 vue-tsc 的构建兼容问题。该记录不代替以后依赖更新时的安全检查。
 
-当前不需要安装数据库。`local` 环境通过 `application-local.yml` 排除数据源自动配置，因此即便启用可选 `persistence` 依赖也不会尝试创建数据源。后续接入本地数据库时需删除该排除项并提供连接配置。
+## 开发时的行为与数据
 
-首页可选择公历或农历日期和时间进行基础排盘，农历可选闰月，结果同时展示对应公历和农历。计算约定及接口示例见 [API 文档](api/README.md)。
+- 后端默认 `local` 配置排除数据源自动配置。未来接数据库时，需删除该排除项并提供连接及迁移配置；当前只有可选依赖，无数据库模型。
+- 后端代码变更需先停止旧服务，再重新打包启动；前端通过 Vite 热更新。运行中的 JAR 不应被重新打包覆盖。
+- PC 使用 Element Plus，手机使用 Vant，支持公农历切换与闰月。实际排盘结果始终由本地后端计算，前端 Tyme4ts 只用于日期输入适配。
+- 已有出生信息、记录列表和附加详情可收起。打开命盘不会请求流月 / 日 / 时，打开相应选择器时再加载。精确节令、日期与时辰边界在详情内查看。
+- `localStorage` 键为 `fatestay.guest-charts.v1`，最多三份出生排盘快照。清除该键可重置样例；后端不会保存这些记录。换域名 / 端口会使用不同的站点存储。
+- 流月 / 日 / 时只在当前页面有限缓存，刷新后首次查看仍需后端连接。已有页面中的快照切换不需重算，但尚无离线网站加载或纯前端排盘。
 
-PC/手机选择器已分别接入 Element Plus/Vant，选择器适配测试运行 `cd frontend && npm test`，交互与选型见 [选择器说明](date-time-picker.md)。
-
-排盘结果已扩展十神、藏干、五行和纳音；PC 为对照表，手机为逐柱卡片。详细字段及五行计数口径见 [API 文档](api/README.md)。
-
-未登录模式会自动缓存最多 3 份完整排盘到当前浏览器，刷新可恢复并切换；本机记录说明见 [本机记录](local-chart-library.md)。开发时清除 localStorage 对应键可重置本机样例，后端不存储这些记录。
-
-新排盘需选择性别，结果已加入起运时间、10 步大运及每步对应流年，可点选切换；旧本机记录需补选性别并重算以升级运程快照。
-
-选中流年后会按需加载节令流月，选中流月再加载流日。首次加载明细需本地后端运行；明细只在本页内存有限缓存，不增加三份本机记录的体积。
-
-选择流日后可查看十二时辰，并点选干支、十神、五行和纳音详情；标准时段与节令裁切后的实际覆盖分开显示。流时明细需要后端按需计算，仍不写入本机快照。
+相关说明：[日期选择器](date-time-picker.md) · [紧凑工作台](compact-workspace.md) · [本机记录](local-chart-library.md) · [API](api/README.md)。

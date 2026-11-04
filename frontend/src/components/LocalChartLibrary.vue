@@ -4,6 +4,7 @@ import type { ChartLibrary } from '../lib/local-charts'
 
 defineProps<{ library: ChartLibrary; notice: string; status: string; pending: boolean; hasChart: boolean }>()
 const emit = defineEmits<{ select: [id: string]; remove: [id: string]; rename: [id: string, name: string]; replace: [id: string]; new: []; save: []; dismiss: [] }>()
+const managing = ref(false)
 const editingId = ref<string | null>(null)
 const deleteId = ref<string | null>(null)
 const name = ref('')
@@ -11,8 +12,9 @@ function rename(id: string) { if (name.value.trim()) { emit('rename', id, name.v
 </script>
 
 <template>
-  <section class="panel local-library" aria-labelledby="local-library-title">
-    <div class="library-heading"><div><p>未登录 · 本地模式</p><h2 id="local-library-title">我的本机排盘 <span>{{ library.records.length }} / 3</span></h2></div><button type="button" class="new-local-chart" @click="emit('new')">＋ 新增排盘</button></div>
+  <section class="panel local-library" :class="{ managing }" aria-labelledby="local-library-title">
+    <div class="library-heading"><div><p>未登录 · 本地模式</p><h2 id="local-library-title">我的本机排盘 <span>{{ library.records.length }} / 3</span></h2></div><div class="library-tools"><button type="button" class="manage-library" :aria-expanded="managing" @click="managing = !managing">{{ managing ? '完成' : '切换 / 管理' }}</button><button type="button" class="new-local-chart" @click="emit('new')">＋ 新增</button></div></div>
+    <p v-if="library.activeId" class="library-current">当前 · {{ library.records.find(record => record.id === library.activeId)?.name }}</p>
     <p class="library-description">出生信息和排盘结果仅保存在当前浏览器，不会保存到账号。最多 3 份，清除网站数据后会丢失。</p>
     <div v-if="library.records.length" class="local-records" aria-label="已保存的排盘">
       <article v-for="record in library.records" :key="record.id" class="local-record" :class="{active: library.activeId === record.id}">
@@ -30,6 +32,7 @@ function rename(id: string) { if (name.value.trim()) { emit('rename', id, name.v
 </template>
 
 <style scoped>
+.library-current { display: none; }
 .local-library { margin-bottom: 24px; padding: 25px 28px 18px; }
 .library-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .library-heading p { margin: 0 0 8px; color: #7d8b78; font-size: 11px; }

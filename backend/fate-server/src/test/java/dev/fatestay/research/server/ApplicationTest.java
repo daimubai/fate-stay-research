@@ -37,6 +37,29 @@ class ApplicationTest {
             .andExpect(jsonPath("$.shenSha.hits[0].bases[0].reference").value("日干"));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"SOLAR", "LUNAR"})
+    void auxiliaryPalacesArePublicAndConsistentAcrossCalendarInputs(String calendar) throws Exception {
+        String date = calendar.equals("SOLAR") ? "\"birthDate\":\"1986-05-29\""
+            : "\"lunarDate\":{\"year\":1986,\"month\":4,\"day\":21,\"leapMonth\":false}";
+        mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON)
+            .content("{\"calendarType\":\""+calendar+"\",\"gender\":\"FEMALE\",\"birthTime\":\"13:37\","+date+"}"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.auxiliaryPalaces.ruleVersion").value("tyme-eight-char-palaces-v1"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.fetalOrigin.ganZhi").value("甲申"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.fetalOrigin.stem.tenGod").value("伤官"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.fetalOrigin.stem.element").value("木"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.fetalOrigin.branch.element").value("金"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.fetalOrigin.naYin").value("泉中水"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.ownSign.ganZhi").value("癸巳"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.ownSign.stem.tenGod").value("比肩"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.ownSign.naYin").value("长流水"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.bodySign.ganZhi").value("辛丑"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.bodySign.stem.tenGod").value("偏印"))
+            .andExpect(jsonPath("$.auxiliaryPalaces.bodySign.naYin").value("壁上土"))
+            .andExpect(jsonPath("$.pillarDetails.length()").value(4));
+    }
+
     @Test
     void healthIsPublicAndReturnsApplicationIdentity() throws Exception {
         mvc.perform(get("/api/v1/health"))

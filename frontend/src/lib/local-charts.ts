@@ -75,6 +75,18 @@ function validChart(value: unknown, birth: BirthSelection): value is BaziChart {
   const expected = Object.fromEntries(elements.map(name => [name, 0]))
   for (const p of value.pillarDetails) { expected[p.stem.element]++; expected[p.branch.element]++ }
   if (!elements.every(name => value.elementCounts[name] === expected[name])) return false
+  if (value.auxiliaryPalaces !== undefined) {
+    const palaces = value.auxiliaryPalaces
+    if (!isObject(palaces) || palaces.ruleVersion !== 'tyme-eight-char-palaces-v1') return false
+    for (const key of ['fetalOrigin', 'ownSign', 'bodySign']) {
+      const p = palaces[key]
+      if (!isObject(p) || !isObject(p.stem) || !isObject(p.branch)
+        || !text(p.ganZhi, 2) || p.ganZhi.length !== 2 || p.ganZhi !== `${p.stem.name}${p.branch.name}`
+        || !text(p.stem.name, 1) || !'甲乙丙丁戊己庚辛壬癸'.includes(p.stem.name)
+        || !text(p.branch.name, 1) || !'子丑寅卯辰巳午未申酉戌亥'.includes(p.branch.name)
+        || !element(p.stem.element) || !element(p.branch.element) || !text(p.stem.tenGod, 8) || !text(p.naYin, 12)) return false
+    }
+  }
   if (!birth.gender) return value.gender == null && value.fortune == null // legacy snapshots remain viewable
   if (value.gender !== birth.gender || !isObject(value.fortune)) return false
   const f = value.fortune

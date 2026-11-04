@@ -26,7 +26,21 @@ export interface ShenShaResult {
   hits: { id: string; name: string; pillarKey: string; pillarLabel: string; targetBranch: string; bases: { reference: string; sourceValue: string; targetValues: string[] }[] }[]
 }
 
+export interface AuxiliaryPillar {
+  ganZhi: string
+  stem: StemDetail
+  branch: { name: string; element: ElementName }
+  naYin: string
+}
+export interface AuxiliaryPalaces {
+  ruleVersion: string
+  fetalOrigin: AuxiliaryPillar
+  ownSign: AuxiliaryPillar
+  bodySign: AuxiliaryPillar
+}
+
 export interface BaziChart {
+  auxiliaryPalaces?: AuxiliaryPalaces
   shenSha?: ShenShaResult
   gender?: BirthGender | null
   fortune?: FortuneTimeline | null

@@ -203,3 +203,39 @@ test('new traits round trip, upgrade the same slot, and reject damaged evidence'
     assert.throws(() => saveChart(emptyLibrary(), birth, invalid, undefined, now))
   }
 })
+
+test('auxiliary palaces upgrade old snapshots in place, preserve names and round trip independently', () => {
+  const palaces = JSON.parse(readFileSync(new URL('./fixtures/bazi-palaces.json', import.meta.url), 'utf8'))
+  const old = renameChart(add(emptyLibrary()), chartId(data().birth), '我的排盘')
+  const { birth, chart } = data()
+  chart.auxiliaryPalaces = structuredClone(palaces)
+  const updated = saveChart(old, birth, chart, undefined, now)
+  assert.equal(updated.records.length, 1)
+  assert.equal(updated.activeId, old.activeId)
+  assert.equal(updated.records[0].name, '我的排盘')
+  chart.auxiliaryPalaces.fetalOrigin.naYin = '修改'
+  assert.deepEqual(updated.records[0].chart.auxiliaryPalaces, palaces)
+  const storage = memoryStorage()
+  writeLibrary(storage, updated)
+  assert.deepEqual(readLibrary(storage).library.records[0].chart.auxiliaryPalaces, palaces)
+  assert.equal(readLibrary(memoryStorage(JSON.stringify(old))).library.records.length, 1)
+  assert.equal(readLibrary(memoryStorage(JSON.stringify(old))).library.records[0].chart.auxiliaryPalaces, undefined)
+})
+
+test('damaged auxiliary palaces are rejected at save and read time', () => {
+  const palaces = JSON.parse(readFileSync(new URL('./fixtures/bazi-palaces.json', import.meta.url), 'utf8'))
+  for (const mutate of [
+    p => p.ruleVersion = 'unknown', p => delete p.ownSign, p => p.fetalOrigin = null,
+    p => p.bodySign.ganZhi = '甲子', p => p.bodySign.branch.element = '未知',
+    p => p.ownSign.stem.name = '错', p => p.ownSign.stem.tenGod = '', p => p.bodySign.naYin = '',
+  ]) {
+    const { birth, chart } = data()
+    chart.auxiliaryPalaces = structuredClone(palaces)
+    mutate(chart.auxiliaryPalaces)
+    assert.throws(() => saveChart(emptyLibrary(), birth, chart), /不完整/)
+    const raw = { version: 1, records: [{ id: chartId(birth), name: '损坏', birth, chart, savedAt: now }], activeId: chartId(birth) }
+    const loaded = readLibrary(memoryStorage(JSON.stringify(raw)))
+    assert.equal(loaded.library.records.length, 0)
+    assert.match(loaded.notice, /损坏/)
+  }
+})

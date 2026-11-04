@@ -33,7 +33,7 @@ Tyme4j 的 `God` 为黄历吉神凶神，不能直接作为八字四柱神煞。
 
 `shenSha.rules` 列出全部启用规则；`hits` 每项包含 `id/name/pillarKey/pillarLabel/targetBranch`，`bases` 包含 `reference/sourceValue/targetValues`，便于追溯命中依据。样例命中月柱天乙贵人（日干癸查卯巳）和日柱将星（日支酉查酉）。空结果为 `hits: []`。
 
-PC 以四柱对照表展示，手机以逐柱卡片展示，另提供可展开的命中依据与规则版本。信息只作传统分类，不单独作吉凶判断。
+PC 和手机均保留四柱横向对照，长生神煞默认折叠，展开后可查看对照表、命中依据和规则版本。信息只作传统分类，不单独作吉凶判断。
 
 ## 本机缓存
 

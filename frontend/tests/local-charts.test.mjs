@@ -239,3 +239,41 @@ test('damaged auxiliary palaces are rejected at save and read time', () => {
     assert.match(loaded.notice, /损坏/)
   }
 })
+
+test('pillar relations upgrade the same legacy slot and retain immutable matching evidence after reload', () => {
+  const relations = JSON.parse(readFileSync(new URL('./fixtures/bazi-relations.json', import.meta.url), 'utf8'))
+  const old = renameChart(add(emptyLibrary()), chartId(data().birth), '关系样例')
+  const { birth, chart } = data()
+  chart.relations = structuredClone(relations)
+  const updated = saveChart(old, birth, chart, undefined, now)
+  assert.equal(updated.records.length, 1)
+  assert.equal(updated.records[0].name, '关系样例')
+  assert.equal(updated.activeId, old.activeId)
+  chart.relations.hits[0].participants[0].value = '子'
+  assert.deepEqual(updated.records[0].chart.relations, relations)
+  const storage = memoryStorage()
+  writeLibrary(storage, updated)
+  assert.deepEqual(readLibrary(storage).library.records[0].chart.relations, relations)
+  assert.equal(readLibrary(memoryStorage(JSON.stringify(old))).library.records[0].chart.relations, undefined)
+})
+
+test('corrupt relation scope, references, identity and forms are rejected when saving and restoring', () => {
+  const relations = JSON.parse(readFileSync(new URL('./fixtures/bazi-relations.json', import.meta.url), 'utf8'))
+  for (const mutate of [
+    r => r.ruleVersion = 'unknown', r => r.scope = 'FLOW_YEAR', r => r.rules.pop(),
+    r => r.rules[0].provider = 'PROJECT_RULES_ON_TYME4J', r => r.hits.push(structuredClone(r.hits[0])),
+    r => r.hits[0].participants[0].value = '子', r => r.hits[0].participants[0].ganZhi = '甲子',
+    r => r.hits[0].participants[1] = structuredClone(r.hits[0].participants[0]),
+    r => r.hits[0].id = 'BRANCH_PUNISHMENT:day-hour', r => r.hits[0].form = 'TRIPLE',
+    r => r.hits[0].associatedElement = '木', r => r.hits[1].directed = true,
+  ]) {
+    const { birth, chart } = data()
+    chart.relations = structuredClone(relations)
+    mutate(chart.relations)
+    assert.throws(() => saveChart(emptyLibrary(), birth, chart), /不完整/)
+    const raw = { version: 1, records: [{ id: chartId(birth), name: '损坏', birth, chart, savedAt: now }], activeId: chartId(birth) }
+    const result = readLibrary(memoryStorage(JSON.stringify(raw)))
+    assert.equal(result.library.records.length, 0)
+    assert.match(result.notice, /损坏/)
+  }
+})

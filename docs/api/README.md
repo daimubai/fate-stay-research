@@ -22,7 +22,7 @@
 {"birthDate":"1986-05-29","birthTime":"13:37","gender":"MALE"}
 ```
 
-基础响应节选（完整结果还包含下文的详解、神煞、胎元两宫、性别和起运运程字段）：
+基础响应节选（完整结果还包含下文的详解、神煞、胎元两宫、四柱关系、性别和起运运程字段）：
 
 ```json
 {
@@ -188,3 +188,7 @@
 | `auxiliaryPalaces` | `ruleVersion`、胎元 `fetalOrigin`、命宫 `ownSign`、身宫 `bodySign`；每项含干支、天干十神、干支五行及纳音 | [原生接口与完整样例](../natal-palaces.md) |
 
 以上属于同一次出生 Chart，不计入流月 / 日 / 时接口的结果范围；不改变四柱数量、表层五行 8 字统计或请求字段。前端历史快照可缺新字段，新 HTTP 计算会返回完整新字段。
+
+## 四柱合冲刑破害
+
+出生 Chart 新增 `relations`，包含 `ruleVersion: natal-pillar-relations-v1`、`scope: NATAL_FOUR_PILLARS`、七类 `rules` 及 `hits`。每项保留稳定柱位组合 ID、类型、模式、形态、刑向、参与者、配属五行（非合类为 null）及依据。五合 / 六合 / 冲 / 害使用 Tyme4j 原生 API，三合 / 刑 / 破为项目规则。只标记出生四柱的结构关系，不判已合化，不包含藏干、胎元两宫或运程；请求字段及公开路径不变。完整查表、三刑合并、自刑门槛与样例见 [四柱关系设计](../pillar-relations.md)。

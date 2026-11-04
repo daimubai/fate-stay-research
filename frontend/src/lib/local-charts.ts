@@ -87,6 +87,7 @@ function validChart(value: unknown, birth: BirthSelection): value is BaziChart {
         || !element(p.stem.element) || !element(p.branch.element) || !text(p.stem.tenGod, 8) || !text(p.naYin, 12)) return false
     }
   }
+  if (value.relations !== undefined && !validRelations(value.relations, value.pillarDetails)) return false
   if (!birth.gender) return value.gender == null && value.fortune == null // legacy snapshots remain viewable
   if (value.gender !== birth.gender || !isObject(value.fortune)) return false
   const f = value.fortune
@@ -103,6 +104,48 @@ function validChart(value: unknown, birth: BirthSelection): value is BaziChart {
     && decade.startAge === f.decades[0].startAge + index * 10 && decade.endAge === decade.startAge + 9
     && Array.isArray(decade.annualYears) && decade.annualYears.length === 10
     && decade.annualYears.every((year: any, j: number) => cycle(year) && year.year === decade.startYear + j && year.age === decade.startAge + j))
+}
+
+/** Validate structure and pillar references, without recomputing the backend's relationship rules. */
+function validRelations(value: unknown, pillars: any[]): boolean {
+  const rules = [
+    ['STEM_COMBINATION', '天干五合', 'TYME4J'], ['BRANCH_SIX_COMBINATION', '地支六合', 'TYME4J'],
+    ['BRANCH_THREE_COMBINATION', '地支三合', 'PROJECT_RULES_ON_TYME4J'], ['BRANCH_PUNISHMENT', '地支刑', 'PROJECT_RULES_ON_TYME4J'],
+    ['BRANCH_CLASH', '地支冲', 'TYME4J'], ['BRANCH_BREAK', '地支破', 'PROJECT_RULES_ON_TYME4J'], ['BRANCH_HARM', '地支害', 'TYME4J'],
+  ]
+  if (!isObject(value) || value.ruleVersion !== 'natal-pillar-relations-v1' || value.scope !== 'NATAL_FOUR_PILLARS'
+    || !Array.isArray(value.rules) || value.rules.length !== rules.length
+    || !value.rules.every((r: any, i: number) => isObject(r) && r.kind === rules[i][0] && r.label === rules[i][1] && r.provider === rules[i][2])
+    || !Array.isArray(value.hits) || value.hits.length > 64) return false
+  const seen = new Set<string>()
+  for (const h of value.hits) {
+    if (!isObject(h) || !rules.some(r => r[0] === h.kind) || !text(h.id, 100) || seen.has(h.id)
+      || !text(h.pattern, 3) || h.pattern.length < 2 || !text(h.basis, 120) || typeof h.directed !== 'boolean'
+      || !['PAIR','TRIPLE','SELF_PAIR'].includes(h.form) || !Array.isArray(h.participants)
+      || h.participants.length !== (h.form === 'TRIPLE' ? 3 : 2)) return false
+    const stem = h.kind === 'STEM_COMBINATION'
+    const allowed = stem ? '甲乙丙丁戊己庚辛壬癸' : '子丑寅卯辰巳午未申酉戌亥'
+    if (![...h.pattern].every(c => allowed.includes(c))) return false
+    const participantKeys = new Set<string>(), values = new Set<string>()
+    for (const p of h.participants) {
+      if (!isObject(p) || !keys.includes(p.pillarKey) || participantKeys.has(p.pillarKey)) return false
+      const original = pillars.find(pillar => pillar.key === p.pillarKey)
+      if (p.pillarLabel !== original.label || p.ganZhi !== original.ganZhi
+        || p.value !== (stem ? original.stem.name : original.branch.name) || !h.pattern.includes(p.value)) return false
+      participantKeys.add(p.pillarKey); values.add(p.value)
+    }
+    const id = `${h.kind}:${keys.filter(key => participantKeys.has(key)).join('-')}`
+    if (h.id !== id) return false
+    const combination = ['STEM_COMBINATION','BRANCH_SIX_COMBINATION','BRANCH_THREE_COMBINATION'].includes(h.kind)
+    if (combination ? !element(h.associatedElement) : h.associatedElement !== null) return false
+    if (h.form === 'TRIPLE' && (!['BRANCH_THREE_COMBINATION','BRANCH_PUNISHMENT'].includes(h.kind) || values.size !== 3)) return false
+    if (h.kind === 'BRANCH_THREE_COMBINATION' && h.form !== 'TRIPLE') return false
+    if (h.form === 'SELF_PAIR' && (h.kind !== 'BRANCH_PUNISHMENT' || values.size !== 1 || !'辰午酉亥'.includes(h.participants[0].value))) return false
+    if (h.form === 'PAIR' && values.size !== 2) return false
+    if (h.directed && (h.kind !== 'BRANCH_PUNISHMENT' || h.form !== 'PAIR' || h.pattern.length !== 3)) return false
+    seen.add(h.id)
+  }
+  return true
 }
 
 function validRecord(value: unknown): value is SavedChart {

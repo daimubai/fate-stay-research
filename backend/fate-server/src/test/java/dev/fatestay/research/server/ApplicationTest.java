@@ -60,6 +60,29 @@ class ApplicationTest {
             .andExpect(jsonPath("$.pillarDetails.length()").value(4));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"SOLAR", "LUNAR"})
+    void natalRelationsReturnRuleProvenanceAndExactColumnReferences(String calendar) throws Exception {
+        String date = calendar.equals("SOLAR") ? "\"birthDate\":\"1986-05-29\""
+            : "\"lunarDate\":{\"year\":1986,\"month\":4,\"day\":21,\"leapMonth\":false}";
+        mvc.perform(post("/api/v1/bazi/charts").contentType(MediaType.APPLICATION_JSON)
+            .content("{\"calendarType\":\""+calendar+"\",\"gender\":\"MALE\",\"birthTime\":\"13:37\","+date+"}"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.relations.ruleVersion").value("natal-pillar-relations-v1"))
+            .andExpect(jsonPath("$.relations.scope").value("NATAL_FOUR_PILLARS"))
+            .andExpect(jsonPath("$.relations.rules.length()").value(7))
+            .andExpect(jsonPath("$.relations.rules[0].provider").value("TYME4J"))
+            .andExpect(jsonPath("$.relations.rules[2].provider").value("PROJECT_RULES_ON_TYME4J"))
+            .andExpect(jsonPath("$.relations.hits.length()").value(2))
+            .andExpect(jsonPath("$.relations.hits[0].kind").value("BRANCH_PUNISHMENT"))
+            .andExpect(jsonPath("$.relations.hits[0].directed").value(true))
+            .andExpect(jsonPath("$.relations.hits[0].participants[0].pillarKey").value("year"))
+            .andExpect(jsonPath("$.relations.hits[0].participants[0].value").value("寅"))
+            .andExpect(jsonPath("$.relations.hits[0].participants[1].pillarKey").value("month"))
+            .andExpect(jsonPath("$.relations.hits[0].participants[1].value").value("巳"))
+            .andExpect(jsonPath("$.relations.hits[1].kind").value("BRANCH_HARM"));
+    }
+
     @Test
     void healthIsPublicAndReturnsApplicationIdentity() throws Exception {
         mvc.perform(get("/api/v1/health"))

@@ -36,6 +36,7 @@ flowchart LR
 | 输入与历法 | 公农历 / 闰月、分钟精度、性别、双历输出，PC / 手机选择器 | [日期选择器](../date-time-picker.md) |
 | 命盘 | 四柱、日主、十神、藏干、五行、纳音及表层计数 | [API](../api/README.md) |
 | 长生与神煞 | 日干长生、自坐长生、七项规则及逐柱命中依据 | [规则查表](../natal-traits.md) |
+| 四柱关系 | 五合、六合 / 三合与刑冲破害，准确柱位、刑向和配属五行 | [关系设计](../pillar-relations.md) |
 | 衍生宫位 | 胎元、命宫、身宫及其干支属性 | [胎元与两宫](../natal-palaces.md) |
 | 起运与运程 | 起运精确时刻 / 间隔、十步大运、流年、流月、流日、流时 | [API](../api/README.md) |
 | 工作台 | PC 双栏、手机横向四柱、默认折叠、时间选择面板与单份详情 | [交互设计](../compact-workspace.md) |
@@ -51,6 +52,7 @@ sequenceDiagram
     participant Core as BaziCalculator
     participant Cal as TymeCalendar
     participant Rules as ShenShaCalculator
+    participant Relations as PillarRelationsCalculator
     participant Cache as localStorage
     User->>UI: 输入出生日期 / 时间 / 性别
     UI->>API: POST /api/v1/bazi/charts
@@ -59,6 +61,8 @@ sequenceDiagram
     Cal-->>Core: 四柱、属性、长生、胎元两宫
     Core->>Rules: 基于已计算四柱匹配七项神煞
     Rules-->>Core: 规则目录、命中及参照依据
+    Core->>Relations: 匹配出生四柱关系
+    Relations-->>Core: 七类关系与具体柱位依据
     Core->>Cal: 按明确性别计算起运 / 大运 / 流年
     Cal-->>Core: 版本化运程结果
     Core-->>API: Chart 与计算元数据
@@ -82,6 +86,7 @@ sequenceDiagram
 | `elementCounts` | 仅四干四支的五行计数，总数为 8 |
 | `shenSha` | 七项项目规则目录及每个柱位的命中依据 |
 | `auxiliaryPalaces` | 胎元 / 命宫 / 身宫及其天干十神、五行、纳音 |
+| `relations` | 七类出生四柱关系、原生 / 项目来源、参与柱位、形态与刑向 |
 | `fortune` | 起运时刻 / 间隔、顺逆方向、十步大运及每步十个流年 |
 
 流月、流日和流时通过独立接口返回，不扩充出生 Chart 快照。详细 DTO 以 [API 文档](../api/README.md) 为准。
@@ -98,6 +103,7 @@ sequenceDiagram
 | 流月 / 流日 | `jie-month-zi23-day-v1`；节令区间、23 点日界，含开始、不含结束 |
 | 流时 | `zi23-two-hour-jie-clip-v1`；十二标准时辰与所选流日裁切区间相交 |
 | 神煞 | `PROJECT_RULES_ON_TYME4J` / `common-seven-day-year-v1` |
+| 四柱关系 | `natal-pillar-relations-v1` / `NATAL_FOUR_PILLARS`，Tyme 原生配对与项目规则组合 |
 | 胎元两宫 | `tyme-eight-char-palaces-v1`，直接使用原生接口 |
 
 十二长生调用 `HeavenStem.getTerrain`，分别计算日干对各支与各柱自坐。胎元 / 命宫 / 身宫分别调用 `getFetalOrigin/getOwnSign/getBodySign`，不参与四柱数组、8 字五行统计或四柱神煞查柱。
@@ -105,6 +111,8 @@ sequenceDiagram
 神煞由独立 `ShenShaCalculator` 实现，仅支持已声明的七项：天乙贵人、禄神、驿马、桃花、华盖、将星、旬空。项目规则与 Tyme4j 黄历 `God` 不混用。每个命中记录规则 ID、目标柱位、目标地支和参照依据；同柱同项合并年支 / 日支依据。完整查表及流派约定见 [神煞规则](../natal-traits.md)。
 
 当前无地点、夏令时 / 真太阳时校正或多流派切换；不把胎元视为实际受孕日期，不将五行数量转为旺衰 / 喜用评分。未来新增策略应使用独立版本，不覆盖已有规则含义。
+
+四柱关系在 `BaziCalculator` 中基于已经计算的 `Pillars` 组合，不扩展 `TymeCalendar.Analysis` 或现有四柱规则版本。`TymeRelations` 封装 Tyme4j 的五合、六合、冲、害；`PillarRelationsCalculator` 补充三合、刑、破并保留各柱位组合，匹配集合不可变。前端只渲染和标记，不重复实现关系计算，历史快照缺字段时保留旧结果。详见 [关系规则与边界](../pillar-relations.md)。
 
 ## 5. 运程与时间区间
 
@@ -125,6 +133,7 @@ sequenceDiagram
 | `App.vue` | 出生输入、当前命盘、记录库与请求版本；切换输入时失效旧结果，切换快照时恢复输入 |
 | `BirthPicker` 与 PC / 手机字段组件 | 按设备载入 Element Plus / Vant；公农历转换、闰月、合法日期及确认操作 |
 | `BaziResult` | 四柱横向对照；长生神煞、五行和说明折叠 |
+| `PillarRelations` | 默认折叠的关系摘要、分类筛选、柱位 / 干支依据及命盘标记 |
 | `AuxiliaryPalaces` | 按需展开胎元 / 命宫 / 身宫属性与计算依据 |
 | `LocalChartLibrary` | 记录切换、管理、满额替换、保存状态与存储异常提示 |
 | `FortuneResult` | 五级时间入口、当前选择路径、单份所选时间详情及起运摘要 |
@@ -179,7 +188,7 @@ JDK / Node 环境、启动 / 停止命令见 [macOS 开发](../local-development
 
 ## 9. 验证现状
 
-最近一次功能验证：132 项核心计算 + 52 项 HTTP / 安全测试、前端 23 项日期 / 缓存测试、TypeScript / Vite 构建均通过。覆盖已知样例、公农历 / 闰月等价性、性别、节令 / 时辰边界、支持范围及版本化附加字段。
+最近一次功能验证：152 项核心计算 + 54 项 HTTP / 安全测试、前端 25 项日期 / 缓存测试、TypeScript / Vite 构建均通过。覆盖已知样例、公农历 / 闰月等价性、性别、节令 / 时辰边界、支持范围及版本化附加字段。
 
 桌面 / 390px / 320px 的临时 Playwright 验证覆盖：默认无流月以下请求、逐级打开才加载、缓存复用、失败重试、延迟旧响应、Esc / 遮罩关闭、焦点 / 滚动恢复、记录管理及真实日期输入。浏览器脚本未纳入 CI，Safari / Android 真机尚未覆盖。CI 当前执行 Maven 默认 / 可选持久化构建及前端依赖检查、测试和构建。
 

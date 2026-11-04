@@ -15,6 +15,7 @@ This document describes the implementation as of **2026-11-04**. It runs with a 
 | Four Pillars | Year/month/day/hour, day master, stem and hidden-stem ten gods, hidden stems, stem/branch elements and Na Yin |
 | Twelve life stages | Day stem against each branch, plus each pillar's own stem against its branch |
 | Seven Shen Sha rules | Tian Yi, Lu Shen, Yi Ma, Tao Hua, Hua Gai, Jiang Xing and Xun Kong, with rule versions and matching evidence |
+| Natal pillar relationships | Five stem combinations, branch six/three combinations, punishment/clash/break/harm, with exact columns, direction, correspondence and chart highlighting |
 | Auxiliary palaces | Tyme4j-native fetal origin, own sign and body sign, including elements, stem ten god and Na Yin |
 | Fortune timeline | Exact starting time and converted interval, direction, ten decades and ten annual years per decade |
 | Monthly/daily/hourly flow | Jie-based months, days changing at 23:00, twelve double-hours with nominal and actual clipped intervals |
@@ -34,6 +35,7 @@ The backend computes Bazi relationships and fortune timelines. Frontend Tyme4ts 
 - Flow years support 1900–2210. Chou month may extend into the next civil year. Intervals include their start and exclude their end; month boundaries clip days/hours. Outside hours remain references without fabricated active intervals.
 - Element counts include only the eight visible natal characters, not hidden-stem weights or auxiliary palaces; they are not strength or favorable-element scores.
 - Shen Sha is an explicitly versioned seven-rule project layer over Tyme-derived pillars, separate from almanac God lists. Life stages and auxiliary palaces use native Tyme4j APIs.
+- Pillar relationships use native Tyme4j APIs for stem combinations, six combinations, clashes and harms; trines, punishments and breaks are versioned project rules. Matches describe structure and correspondence, not confirmed transformation.
 - Location, daylight-saving/true-solar-time corrections, selectable schools, pre-start minor fortunes, accounts and cloud storage remain unimplemented.
 
 See [life stages and Shen Sha](docs/natal-traits.md), [auxiliary palaces](docs/natal-palaces.md) and [API conventions](docs/api/README.md).
@@ -146,7 +148,7 @@ npm test
 npm run build
 ```
 
-The optional persistence profile validates dependencies without creating a database under the current local configuration. Latest feature validation passed **132 core + 52 HTTP/security tests**, **23 frontend tests**, and the production build. Temporary Playwright/local Chrome checks covered desktop and 390px/320px layouts, lazy requests, retry/cancellation, legacy upgrades and real birth input. Browser scripts are not part of repository CI; real Safari/Android devices remain untested. See [validation history](docs/verification.md).
+The optional persistence profile validates dependencies without creating a database under the current local configuration. Latest feature validation passed **152 core + 54 HTTP/security tests**, **25 frontend tests**, and the production build. Temporary Playwright/local Chrome checks covered desktop and 390px/320px layouts, lazy requests, retry/cancellation, legacy upgrades and real birth input. Browser scripts are not part of repository CI; real Safari/Android devices remain untested. See [validation history](docs/verification.md).
 
 CI runs default/optional-persistence Maven builds and frontend dependency checks, tests and build.
 
@@ -156,6 +158,7 @@ CI runs default/optional-persistence Maven builds and frontend dependency checks
 - [Compact workspace](docs/compact-workspace.md): responsive layout, disclosures, time selection and lazy loading.
 - [Date/time pickers](docs/date-time-picker.md): desktop/mobile calendar input.
 - [Life stages and Shen Sha](docs/natal-traits.md): fixed rules, evidence and versioning.
+- [Pillar relationships](docs/pillar-relations.md): native/project rule boundaries, full trines, punishment forms and matching columns.
 - [Auxiliary palaces](docs/natal-palaces.md): native APIs and response examples.
 - [Guest local library](docs/local-chart-library.md): identity, capacity, compatibility and storage boundaries.
 - [API](docs/api/README.md), [macOS setup](docs/local-development-macos.md), [database planning](docs/database/README.md), [deployment](deploy/README.md) and [validation](docs/verification.md).

@@ -1,0 +1,89 @@
+{
+  "ruleVersion": "natal-pillar-relations-v1",
+  "scope": "NATAL_FOUR_PILLARS",
+  "rules": [
+    {
+      "kind": "STEM_COMBINATION",
+      "label": "天干五合",
+      "provider": "TYME4J"
+    },
+    {
+      "kind": "BRANCH_SIX_COMBINATION",
+      "label": "地支六合",
+      "provider": "TYME4J"
+    },
+    {
+      "kind": "BRANCH_THREE_COMBINATION",
+      "label": "地支三合",
+      "provider": "PROJECT_RULES_ON_TYME4J"
+    },
+    {
+      "kind": "BRANCH_PUNISHMENT",
+      "label": "地支刑",
+      "provider": "PROJECT_RULES_ON_TYME4J"
+    },
+    {
+      "kind": "BRANCH_CLASH",
+      "label": "地支冲",
+      "provider": "TYME4J"
+    },
+    {
+      "kind": "BRANCH_BREAK",
+      "label": "地支破",
+      "provider": "PROJECT_RULES_ON_TYME4J"
+    },
+    {
+      "kind": "BRANCH_HARM",
+      "label": "地支害",
+      "provider": "TYME4J"
+    }
+  ],
+  "hits": [
+    {
+      "id": "BRANCH_PUNISHMENT:year-month",
+      "kind": "BRANCH_PUNISHMENT",
+      "pattern": "寅巳申",
+      "form": "PAIR",
+      "directed": true,
+      "participants": [
+        {
+          "pillarKey": "year",
+          "pillarLabel": "年柱",
+          "ganZhi": "丙寅",
+          "value": "寅"
+        },
+        {
+          "pillarKey": "month",
+          "pillarLabel": "月柱",
+          "ganZhi": "癸巳",
+          "value": "巳"
+        }
+      ],
+      "associatedElement": null,
+      "basis": "寅刑巳；三刑组仅见两支"
+    },
+    {
+      "id": "BRANCH_HARM:year-month",
+      "kind": "BRANCH_HARM",
+      "pattern": "寅巳",
+      "form": "PAIR",
+      "directed": false,
+      "participants": [
+        {
+          "pillarKey": "year",
+          "pillarLabel": "年柱",
+          "ganZhi": "丙寅",
+          "value": "寅"
+        },
+        {
+          "pillarKey": "month",
+          "pillarLabel": "月柱",
+          "ganZhi": "癸巳",
+          "value": "巳"
+        }
+      ],
+      "associatedElement": null,
+      "basis": "Tyme4j 六害"
+    }
+  ]
+}

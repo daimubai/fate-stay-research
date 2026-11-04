@@ -39,7 +39,20 @@ export interface AuxiliaryPalaces {
   bodySign: AuxiliaryPillar
 }
 
+export type RelationKind = 'STEM_COMBINATION' | 'BRANCH_SIX_COMBINATION' | 'BRANCH_THREE_COMBINATION' | 'BRANCH_PUNISHMENT' | 'BRANCH_CLASH' | 'BRANCH_BREAK' | 'BRANCH_HARM'
+export interface RelationParticipant { pillarKey: PillarDetail['key']; pillarLabel: string; ganZhi: string; value: string }
+export interface PillarRelationHit {
+  id: string; kind: RelationKind; pattern: string; form: 'PAIR' | 'TRIPLE' | 'SELF_PAIR'; directed: boolean
+  participants: RelationParticipant[]; associatedElement: ElementName | null; basis: string
+}
+export interface PillarRelationsResult {
+  ruleVersion: string; scope: 'NATAL_FOUR_PILLARS'
+  rules: { kind: RelationKind; label: string; provider: 'TYME4J' | 'PROJECT_RULES_ON_TYME4J' }[]
+  hits: PillarRelationHit[]
+}
+
 export interface BaziChart {
+  relations?: PillarRelationsResult
   auxiliaryPalaces?: AuxiliaryPalaces
   shenSha?: ShenShaResult
   gender?: BirthGender | null

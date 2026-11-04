@@ -1,23 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import AuxiliaryPalaces from './AuxiliaryPalaces.vue'
+import PillarRelations from './PillarRelations.vue'
 import type { BaziChart, ElementName } from '../api/bazi'
 const props = defineProps<{ chart: BaziChart }>()
 const elements: ElementName[] = ['木', '火', '土', '金', '水']
 const tones: Record<ElementName, string> = { 木: 'wood', 火: 'fire', 土: 'earth', 金: 'metal', 水: 'water' }
 const hitsFor = (key: string) => props.chart.shenSha?.hits.filter(h => h.pillarKey === key) ?? []
 const auxiliaryOpen = ref(false)
+const relatedKeys = ref<string[]>([])
+const relatedPart = ref<'stem' | 'branch' | null>(null)
+function highlight(keys: string[], part: 'stem' | 'branch' | null) { relatedKeys.value = keys; relatedPart.value = part }
 </script>
 <template>
   <div class="bazi-details">
     <p class="day-master-line">日主 <b :class="tones[chart.dayMaster.element]">{{ chart.dayMaster.name }}{{ chart.dayMaster.element }}</b><span>十神以日干为参照</span></p>
-    <table class="pillar-table" aria-label="四柱详细对照"><thead><tr><th scope="col">项目</th><th v-for="p in chart.pillarDetails" :key="p.key" scope="col" :class="{'day-column':p.key === 'day'}">{{ p.label }}</th></tr></thead><tbody>
+    <table id="natal-pillars" class="pillar-table" aria-label="四柱详细对照"><thead><tr><th scope="col">项目</th><th v-for="p in chart.pillarDetails" :key="p.key" scope="col" :class="{'day-column':p.key === 'day', 'related-column':relatedKeys.includes(p.key)}">{{ p.label }}</th></tr></thead><tbody>
       <tr><th scope="row">天干十神</th><td v-for="p in chart.pillarDetails" :key="p.key"><span class="ten-god-badge">{{ p.key === 'day' ? '日主' : p.stem.tenGod }}</span></td></tr>
-      <tr class="character-row"><th scope="row">天干</th><td v-for="p in chart.pillarDetails" :key="p.key"><strong :class="tones[p.stem.element]">{{ p.stem.name }}</strong><small :class="tones[p.stem.element]">{{ p.stem.element }}</small></td></tr>
-      <tr class="character-row"><th scope="row">地支</th><td v-for="p in chart.pillarDetails" :key="p.key"><strong :class="tones[p.branch.element]">{{ p.branch.name }}</strong><small :class="tones[p.branch.element]">{{ p.branch.element }}</small></td></tr>
+      <tr class="character-row"><th scope="row">天干</th><td v-for="p in chart.pillarDetails" :key="p.key" :class="{'related-cell':relatedPart === 'stem' && relatedKeys.includes(p.key)}"><strong :class="tones[p.stem.element]">{{ p.stem.name }}</strong><small :class="tones[p.stem.element]">{{ p.stem.element }}</small></td></tr>
+      <tr class="character-row"><th scope="row">地支</th><td v-for="p in chart.pillarDetails" :key="p.key" :class="{'related-cell':relatedPart === 'branch' && relatedKeys.includes(p.key)}"><strong :class="tones[p.branch.element]">{{ p.branch.name }}</strong><small :class="tones[p.branch.element]">{{ p.branch.element }}</small></td></tr>
       <tr class="hidden-row"><th scope="row">藏干</th><td v-for="p in chart.pillarDetails" :key="p.key"><div v-for="hidden in p.hiddenStems" :key="hidden.qi" class="hidden-item"><span class="qi-label">{{ hidden.qi }}</span><b :class="tones[hidden.element]">{{ hidden.name }}</b><span>{{ hidden.tenGod }}</span></div></td></tr>
       <tr class="nayin-row"><th scope="row">纳音</th><td v-for="p in chart.pillarDetails" :key="p.key">{{ p.naYin }}</td></tr>
     </tbody></table>
+    <PillarRelations :chart="chart" @highlight="highlight" />
     <details class="chart-disclosure"><summary><b>长生与神煞</b><span>查看明细</span></summary><div class="disclosure-content">
       <table class="traits-table" aria-label="长生与神煞对照"><thead><tr><th>项目</th><th v-for="p in chart.pillarDetails" :key="p.key">{{ p.label }}</th></tr></thead><tbody><tr><th>十二长生<small>日干对四支</small></th><td v-for="p in chart.pillarDetails" :key="p.key">{{ p.terrain ?? '待重排' }}</td></tr><tr><th>自坐长生<small>本干对本支</small></th><td v-for="p in chart.pillarDetails" :key="p.key">{{ p.selfTerrain ?? '待重排' }}</td></tr><tr><th>神煞</th><td v-for="p in chart.pillarDetails" :key="p.key"><div class="shen-tags"><span v-for="h in hitsFor(p.key)" :key="h.id">{{ h.name }}</span><small v-if="!hitsFor(p.key).length">{{ chart.shenSha ? '未命中' : '待重排' }}</small></div></td></tr></tbody></table>
       <p>十二长生取自 Tyme4j，阳干顺行、阴干逆行，戊随丙、己随丁。神煞采用项目七项规则，未命中不代表完整神煞体系无其他项。</p>
@@ -42,6 +47,9 @@ const auxiliaryOpen = ref(false)
 .pillar-table tbody th,.traits-table tbody th { background: #fafcf8; color: #85917e; font-size: 11px; }
 .pillar-table td { padding: 9px 6px; border-left: 1px solid #eaf0e6; }
 .pillar-table tbody tr > *, .traits-table tbody tr > * { border-top: 1px solid #eaf0e6; }
+#natal-pillars { scroll-margin-top: 16px; }
+.pillar-table thead .related-column { background: #e1ecd7; box-shadow: inset 0 -2px #89a471; }
+.character-row td.related-cell { background: #eff5e9; box-shadow: inset 0 -2px #89a471; }
 .character-row td { padding-top: 8px; padding-bottom: 8px; }
 .character-row strong { font-size: 30px; font-weight: 550; }
 .character-row small { font-size: 10px; margin-left: 8px; }
